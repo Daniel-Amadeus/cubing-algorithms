@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -50,6 +51,9 @@ module.exports = {
             filename: 'index.html',
             template: 'source/pages/index.pug',
             inject: false
-        })
+        }),
+        new CopyWebpackPlugin([
+            { from: 'source/css', to: 'css' }
+        ]),
     ]
 };

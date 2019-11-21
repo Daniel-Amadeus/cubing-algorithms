@@ -25,10 +25,10 @@
                             "algorithm": "(R'2 D) (R' U2) (R D') (R' U2 R')"
                         },
                         {
-                            "algorithm": "(Rw U R' U') (L' U R U')"
+                            "algorithm": "(Rw U R' U') (L' U R U') x'"
                         },
                         {
-                            "algorithm": "F' (Rw U R' U') (L' U R)"
+                            "algorithm": "F' (Rw U R' U') (L' U R) x'"
                         },
                         {
                             "algorithm": "(R U R') (U R U'2 R')"

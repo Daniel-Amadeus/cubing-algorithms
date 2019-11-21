@@ -1,0 +1,37 @@
+
+
+.cubeVis {
+    --faceWidth: 30px;
+    display: grid;
+    grid-template-columns: var(--faceWidth) var(--faceWidth) var(--faceWidth);
+    grid-template-rows: var(--faceWidth) var(--faceWidth) var(--faceWidth);
+    gap: 2px;
+}
+
+.cubeFace{
+    background-color: lightgray;
+}
+
+.cubeFace.yellow {
+    background-color: yellow;
+}
+
+.cubeFace.white {
+    background-color: white;
+}
+
+.cubeFace.blue {
+    background-color: blue;
+}
+
+.cubeFace.green {
+    background-color: green;
+}
+
+.cubeFace.red {
+    background-color: red;
+}
+
+.cubeFace.orange {
+    background-color: orange;
+}
