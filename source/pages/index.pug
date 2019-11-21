@@ -6,10 +6,12 @@ body.bg-light
     .content.container
         h1 Deus' Cubing Algorithms
         p This page will show the algorithms I use and teach to solve twisty puzzles. More infos can be found here: 
-            a(href='speedcube.de') speedcube.de
+            a(href='https://speedcube.de') speedcube.de
         each step in data.steps
             h2= step.name
             each group in step.algorithmGroups
                 h3= group.name
                 each algorithm in group.algorithms
-                    p= algorithm.algorithm
+                    .row
+                        .cubeVis
+                        p= algorithm.algorithm

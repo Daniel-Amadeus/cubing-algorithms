@@ -5,7 +5,7 @@
             "short": "OLL",
             "algorithmGroups": [
                 {
-                    "name": "corners right",
+                    "name": "all corners right",
                     "algorithms": [
                         {
                             "algorithm": "(M' U M) U2 (M' U M)"
@@ -19,7 +19,7 @@
                     ]
                 },
                 {
-                    "name": "edges right",
+                    "name": "all edges right",
                     "algorithms": [
                         {
                             "algorithm": "(R'2 D) (R' U2) (R D') (R' U2 R')"
@@ -29,6 +29,156 @@
                         },
                         {
                             "algorithm": "F' (Rw U R' U') (L' U R)"
+                        },
+                        {
+                            "algorithm": "(R U R') (U R U'2 R')"
+                        },
+                        {
+                            "algorithm": "(L' U' L) (U' L' U2 L)"
+                        },
+                        {
+                            "algorithm": "(R U'2) (R'2 U') (R2 U') (R'2 U'2 R)"
+                        },
+                        {
+                            "algorithm": "F (R U R' U') (R U R' U') (R U R' U') F'"
+                        }
+                    ]
+                },
+                {
+                    "name": "no edge is right",
+                    "algorithms": [
+                        {
+                            "algorithm": "Fw (R U R' U') Fw' U' F (R U R' U') F'"
+                        },
+                        {
+                            "algorithm": "Fw (R U R' U') Fw' U F (R U R' U') F'"
+                        },
+                        {
+                            "algorithm": "(R U R' U) (R' F R F') U2 (R' F R F')"
+                        },
+                        {
+                            "algorithm": "M U (R U R' U') Rw R2 F R F'"
+                        },
+                        {
+                            "algorithm": "Rw U R' U R U2 Rw'2 U' R U' R' U2 Rw"
+                        },
+                        {
+                            "algorithm": "(F R U R' U' F') (Fw R U R' U' Fw')"
+                        },
+                        {
+                            "algorithm": "R U2 R2 F R F' U2 R' F R F'"
+                        }
+                    ]
+                },
+                {
+                    "name": "T pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "(R U R' U') (R' F R F')"
+                        },
+                        {
+                            "algorithm": "F (R U R' U') F'"
+                        }
+                    ]
+                },
+                {
+                    "name": "P pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "Fw (R U R' U') Fw'"
+                        },
+                        {
+                            "algorithm": "Fw' (L' U' L U) Fw"
+                        },
+                        {
+                            "algorithm": "(R Dw) (L' Dw') (R' U) (Lw U Lw')"
+                        },
+                        {
+                            "algorithm": "(L' Dw') (R Dw) (L U') (Rw' U' Rw)"
+                        }
+                    ]
+                },
+                {
+                    "name": "W pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "(R U R' U) (R U' R' U') (R' F R F')"
+                        },
+                        {
+                            "algorithm": "(L' U' L U') (L' U L U) (L F' L' F)"
+                        }
+                    ]
+                },
+                {
+                    "name": "L pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "(Rw U) (R' U) (R U') (R' U) (R U'2 Rw')"
+                        },
+                        {
+                            "algorithm": "(Rw' U') (R U') (R' U) (R U') (R' U2 Rw)"
+                        },
+                        {
+                            "algorithm": "(R B' R B R'2) U2 (F R' F' R)"
+                        },
+                        {
+                            "algorithm": "(R' F R' F' R2) U2 y (R' F R F')"
+                        },
+                        {
+                            "algorithm": "F (R U R' U') (R U R' U') F'"
+                        },
+                        {
+                            "algorithm": "F' (L' U' L U) (L' U' L U) F"
+                        }
+                    ]
+                },
+                {
+                    "name": "big flash pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "R U R' F' U' F U R U2 R'"
+                        },
+                        {
+                            "algorithm": "R' F R U R' U' F' U R"
+                        }
+                    ]
+                },
+                {
+                    "name": "C pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "(R U R'2 U') (R' F) (R U) (R U') F'"
+                        },
+                        {
+                            "algorithm": "R' U' R' F R F' U R"
+                        }
+                    ]
+                },
+                {
+                    "name": "square pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "Rw' U2 R U R' U Rw"
+                        },
+                        {
+                            "algorithm": "Rw U2 R' U' R U' Rw'"
+                        }
+                    ]
+                },
+                {
+                    "name": "small flash pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "Rw U R' U R U2 Rw'"
+                        },
+                        {
+                            "algorithm": "Rw R2 U' R U' R' U2 R U' Rw' R"
+                        },
+                        {
+                            "algorithm": "(Rw' U' R U') (R' U2 Rw)"
+                        },
+                        {
+                            "algorithm": "Rw' R2 U R' U R U2 R' U M'"
                         }
                     ]
                 }
