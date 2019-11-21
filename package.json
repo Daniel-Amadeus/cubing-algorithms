@@ -1,0 +1,39 @@
+{
+  "name": "cubing-algorithms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "css-loader": "^3.2.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.16.0",
+    "pug": "^2.0.4",
+    "pug-html-loader": "^1.1.5",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "webpack",
+    "debug": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Daniel-Amadeus/cubing-algorithms.git"
+  },
+  "author": "Daniel-Amadeus Johannes Glöckner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Daniel-Amadeus/cubing-algorithms/issues"
+  },
+  "homepage": "https://github.com/Daniel-Amadeus/cubing-algorithms#readme"
+}
