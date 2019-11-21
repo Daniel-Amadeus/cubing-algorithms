@@ -192,15 +192,15 @@
                     "algorithms": [
                         {
                             "name": "A-Perm.",
-                            "algorithm": "Lw' U R' D2 R U' R' D2 R2"
+                            "algorithm": "Lw' U R' D2 R U' R' D2 R2 x'"
                         },
                         {
                             "name": "A-Perm.",
-                            "algorithm": "Rw U' L D2 L' U L D2 L2"
+                            "algorithm": "Rw U' L D2 L' U L D2 L2 x'"
                         },
                         {
                             "name": "E-Perm.",
-                            "algorithm": "x' R U' R' D R U R' Uw2 R' U R D R' U' R"
+                            "algorithm": "x' R U' R' D R U R' Uw2 R' U R D R' U' R x'"
                         }
                     ]
                 },

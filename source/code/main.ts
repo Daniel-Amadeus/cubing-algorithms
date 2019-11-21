@@ -67,23 +67,63 @@ function applyMoves(model, moves) {
                     break;
                 }
                 case 'l': {
-                    model.rotateFace(FACES.LEFT, direction);
+                    if(twoLayers) {
+                        model.rotateCube(inverted
+                            ? CUBEROTATIONS.BACK
+                            : CUBEROTATIONS.FORWARD);
+                        model.rotateFace(
+                            FACES.RIGHT, direction);
+                    } else {
+                        model.rotateFace(FACES.LEFT, direction);
+                    }
                     break;
                 }
                 case 'u': {
-                    model.rotateFace(FACES.TOP, direction);
+                    if(twoLayers) {
+                        model.rotateCube(inverted
+                            ? CUBEROTATIONS.CCW
+                            : CUBEROTATIONS.CW);
+                        model.rotateFace(
+                            FACES.BOTTOM, direction);
+                    } else {
+                        model.rotateFace(FACES.TOP, direction);
+                    }
                     break;
                 }
                 case 'd': {
-                    model.rotateFace(FACES.BOTTOM, direction);
+                    if(twoLayers) {
+                        model.rotateCube(inverted
+                            ? CUBEROTATIONS.CW
+                            : CUBEROTATIONS.CCW);
+                        model.rotateFace(
+                            FACES.TOP, direction);
+                    } else {
+                        model.rotateFace(FACES.BOTTOM, direction);
+                    }
                     break;
                 }
                 case 'f': {
-                    model.rotateFace(FACES.FRONT, direction);
+                    if(twoLayers) {
+                        model.rotateCube(inverted
+                            ? CUBEROTATIONS.LEFT
+                            : CUBEROTATIONS.RIGHT);
+                        model.rotateFace(
+                            FACES.BACK, direction);
+                    } else {
+                        model.rotateFace(FACES.FRONT, direction);
+                    }
                     break;
                 }
                 case 'b': {
-                    model.rotateFace(FACES.BACK, direction);
+                    if(twoLayers) {
+                        model.rotateCube(inverted
+                            ? CUBEROTATIONS.RIGHT
+                            : CUBEROTATIONS.LRFT);
+                        model.rotateFace(
+                            FACES.FRONT, direction);
+                    } else {
+                        model.rotateFace(FACES.BACK, direction);
+                    }
                     break;
                 }
                 case 'm': {
@@ -96,6 +136,12 @@ function applyMoves(model, moves) {
                     model.rotateCube(inverted
                         ? CUBEROTATIONS.FORWARD
                         : CUBEROTATIONS.BACK);
+                    break;
+                }
+                case 'y': {
+                    model.rotateCube(inverted
+                        ? CUBEROTATIONS.CCW
+                        : CUBEROTATIONS.CW);
                     break;
                 }
             }
