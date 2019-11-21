@@ -23,7 +23,12 @@ module.exports = {
             },
             {
                 test: /\.pug$/,
-                loader: 'pug-html-loader'
+                loader: 'pug-html-loader',
+                options: {
+                    data: {
+                        data: require('./source/algorithms.json')
+                    }
+                }
             }
         ],
     },
