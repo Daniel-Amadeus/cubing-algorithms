@@ -2,14 +2,26 @@
 
 .cubeVis {
     --faceWidth: 30px;
+    --sideWidth: 15px;
     display: grid;
-    grid-template-columns: var(--faceWidth) var(--faceWidth) var(--faceWidth);
-    grid-template-rows: var(--faceWidth) var(--faceWidth) var(--faceWidth);
+    grid-template-columns:
+        var(--sideWidth)
+        var(--faceWidth)
+        var(--faceWidth)
+        var(--faceWidth)
+        var(--sideWidth);
+    grid-template-rows:
+        var(--sideWidth)
+        var(--faceWidth)
+        var(--faceWidth)
+        var(--faceWidth)
+        var(--sideWidth);
     gap: 2px;
+    background-color: rgb(37, 37, 37);
 }
 
 .cubeFace{
-    background-color: lightgray;
+    background-color: transparent;
 }
 
 .cubeFace.yellow {
