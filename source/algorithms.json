@@ -8,7 +8,8 @@
                     "name": "all corners right",
                     "algorithms": [
                         {
-                            "algorithm": "(M' U M) U2 (M' U M)"
+                            "algorithm": "(M' U M) U2 (M' U M)",
+                            "beginner": true
                         },
                         {
                             "algorithm": "(R U R' U') (M' U R U') Rw'"
@@ -31,7 +32,8 @@
                             "algorithm": "F' (Rw U R' U') (L' U R) x'"
                         },
                         {
-                            "algorithm": "(R U R') (U R U'2 R')"
+                            "algorithm": "(R U R') (U R U'2 R')",
+                            "beginner": true
                         },
                         {
                             "algorithm": "(L' U' L) (U' L' U2 L)"
@@ -192,7 +194,8 @@
                     "algorithms": [
                         {
                             "name": "A-Perm.",
-                            "algorithm": "Lw' U R' D2 R U' R' D2 R2 x'"
+                            "algorithm": "Lw' U R' D2 R U' R' D2 R2 x'",
+                            "beginner": true
                         },
                         {
                             "name": "A-Perm.",
@@ -217,7 +220,8 @@
                         },
                         {
                             "name": "U-Perm.",
-                            "algorithm": "R U' R U R U R U' R' U' R2"
+                            "algorithm": "R U' R U R U R U' R' U' R2",
+                            "beginner": true
                         },
                         {
                             "name": "U-Perm.",

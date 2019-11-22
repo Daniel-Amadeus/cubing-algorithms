@@ -12,6 +12,7 @@ body.bg-light
             each group, groupIndex in step.algorithmGroups
                 h3= group.name
                 each algorithm, algorithmIndex in group.algorithms
-                    .row.py-3
-                        .cubeVis(id=`${stepIndex}-${groupIndex}-${algorithmIndex}`)
+                    -let id = `${stepIndex}-${groupIndex}-${algorithmIndex}`
+                    .row.p-3(id=`${id}`)
+                        .cubeVis(id=`cubeVis-${id}`)
                         p.my-auto.mx-3= algorithm.algorithm

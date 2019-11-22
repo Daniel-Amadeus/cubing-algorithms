@@ -170,9 +170,15 @@ window.onload = function() {
 
     data.steps.forEach((step: any, stepIndex: number) => {
         step.algorithmGroups.forEach((group: any, groupIndex: number) => {
-            group.algorithms.forEach((algorithm: any, algorithmIndex: number) => {
+            group.algorithms.forEach(
+                    (algorithm: any, algorithmIndex: number) => {
                 const id = stepIndex + '-' + groupIndex + '-' + algorithmIndex;
-                const vis = document.getElementById(id) as HTMLDivElement;
+                const row = document.getElementById(id) as HTMLDivElement;
+                if(algorithm.beginner)
+                    row.classList.add('mark');
+
+                const vis = document
+                    .getElementById('cubeVis-' + id) as HTMLDivElement;
                 let cubeModel = CubeModel.create(faces);
 
                 const moves = algorithm.algorithm;
