@@ -2,7 +2,7 @@
     "steps": [
         {
             "name": "Orientation of the last layer",
-            "short": "OLL",
+            "short": "oll",
             "algorithmGroups": [
                 {
                     "name": "all corners right",
@@ -188,6 +188,7 @@
         },
         {
             "name": "Permutation of the last layer",
+            "short": "pll",
             "algorithmGroups": [
                 {
                     "name": "corners only",

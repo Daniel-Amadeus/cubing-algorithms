@@ -24,7 +24,12 @@
     background-color: transparent;
 }
 
+.oll {
+    filter: saturate(0%);
+}
+
 .cubeFace.yellow {
+    filter: none;
     background-color: yellow;
 }
 

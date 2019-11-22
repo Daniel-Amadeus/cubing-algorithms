@@ -149,10 +149,18 @@ function applyMoves(model: any, moves: String) {
     });
 }
 
-function placeFace(vis: HTMLDivElement, x: number, y: number, color: string) {
+function placeFace(
+        vis: HTMLDivElement,
+        x: number,
+        y: number,
+        color: string,
+        classes: string[] = []) {
     const sticker = document.createElement('div');
     sticker.className = 'cubeFace';
     sticker.classList.add(color);
+    classes.forEach(theClass => {
+        sticker.classList.add(theClass);
+    });
     sticker.style.gridColumnStart = x.toString();
     sticker.style.gridRowStart = y.toString();
     vis.appendChild(sticker);
@@ -169,6 +177,7 @@ window.onload = function() {
     ];
 
     data.steps.forEach((step: any, stepIndex: number) => {
+        const classes = [step.short];
         step.algorithmGroups.forEach((group: any, groupIndex: number) => {
             group.algorithms.forEach(
                     (algorithm: any, algorithmIndex: number) => {
@@ -187,30 +196,30 @@ window.onload = function() {
                 let outputFaces = cubeModel.getFacesArray();
                 
                 let leftFace = outputFaces[1];
-                placeFace(vis, 1, 2, colors[leftFace[0]]);
-                placeFace(vis, 1, 3, colors[leftFace[1]]);
-                placeFace(vis, 1, 4, colors[leftFace[2]]);
+                placeFace(vis, 1, 2, colors[leftFace[0]], classes);
+                placeFace(vis, 1, 3, colors[leftFace[1]], classes);
+                placeFace(vis, 1, 4, colors[leftFace[2]], classes);
                 
                 let frontFace = outputFaces[2];
-                placeFace(vis, 2, 5, colors[frontFace[0]]);
-                placeFace(vis, 3, 5, colors[frontFace[1]]);
-                placeFace(vis, 4, 5, colors[frontFace[2]]);
+                placeFace(vis, 2, 5, colors[frontFace[0]], classes);
+                placeFace(vis, 3, 5, colors[frontFace[1]], classes);
+                placeFace(vis, 4, 5, colors[frontFace[2]], classes);
                 
                 let rightFace = outputFaces[3];
-                placeFace(vis, 5, 2, colors[rightFace[2]]);
-                placeFace(vis, 5, 3, colors[rightFace[1]]);
-                placeFace(vis, 5, 4, colors[rightFace[0]]);
+                placeFace(vis, 5, 2, colors[rightFace[2]], classes);
+                placeFace(vis, 5, 3, colors[rightFace[1]], classes);
+                placeFace(vis, 5, 4, colors[rightFace[0]], classes);
                 
                 let backFace = outputFaces[4];
-                placeFace(vis, 2, 1, colors[backFace[2]]);
-                placeFace(vis, 3, 1, colors[backFace[1]]);
-                placeFace(vis, 4, 1, colors[backFace[0]]);
+                placeFace(vis, 2, 1, colors[backFace[2]], classes);
+                placeFace(vis, 3, 1, colors[backFace[1]], classes);
+                placeFace(vis, 4, 1, colors[backFace[0]], classes);
                 
                 let topFace = outputFaces[0];
                 topFace.forEach((color: number, index: number) => {
                     const x = index % 3 + 2
                     const y = Math.floor(index / 3) + 2;
-                    placeFace(vis, x, y, colors[color]);
+                    placeFace(vis, x, y, colors[color], classes);
                 });
             })
         })
