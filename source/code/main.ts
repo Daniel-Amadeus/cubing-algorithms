@@ -16,13 +16,13 @@ const colors = [
     'white'
 ];
 
-function invertMoves (moves) {
+function invertMoves (moves: String): String{
     moves = moves.toLowerCase();
     moves = moves.replace(/[()]/g, '');
-    moves = moves.split(' ');
+    const movesArray = moves.split(' ');
     let invertedMoves = '';
-    for (let i = moves.length-1; i >= 0; i--) {
-        const move = moves[i];
+    for (let i = movesArray.length-1; i >= 0; i--) {
+        const move = movesArray[i];
         const mainMove = move[0];
         let twoLayers = move.includes('w');
         let inverted = move.includes("'");
@@ -37,17 +37,17 @@ function invertMoves (moves) {
     return invertedMoves;
 }
 
-function invertDirection(direction, invert = true) {
+function invertDirection(direction: any, invert = true): any {
     return ((direction == FACEROTATIONS.CW) != invert)
         ? FACEROTATIONS.CW
         : FACEROTATIONS.CCW;
 }
 
-function applyMoves(model, moves) {
+function applyMoves(model: any, moves: String) {
     moves = moves.toLowerCase();
     moves = moves.replace(/[()]/g, '');
-    moves = moves.split(' ');
-    moves.forEach(move => {
+    const movesArray = moves.split(' ');
+    movesArray.forEach(move => {
         const mainMove = move[0];
         let twoLayers = move.includes('w');
         let inverted = move.includes("'");
@@ -149,7 +149,7 @@ function applyMoves(model, moves) {
     });
 }
 
-function placeFace(vis, x, y, color) {
+function placeFace(vis: HTMLDivElement, x: number, y: number, color: string) {
     const sticker = document.createElement('div');
     sticker.className = 'cubeFace';
     sticker.classList.add(color);
@@ -168,11 +168,11 @@ window.onload = function() {
         [5,5,5,5,5,5,5,5,5]
     ];
 
-    data.steps.forEach((step, stepIndex) => {
-        step.algorithmGroups.forEach((group, groupIndex) => {
-            group.algorithms.forEach((algorithm, algorithmIndex) => {
+    data.steps.forEach((step: any, stepIndex: number) => {
+        step.algorithmGroups.forEach((group: any, groupIndex: number) => {
+            group.algorithms.forEach((algorithm: any, algorithmIndex: number) => {
                 const id = stepIndex + '-' + groupIndex + '-' + algorithmIndex;
-                const vis = document.getElementById(id);
+                const vis = document.getElementById(id) as HTMLDivElement;
                 let cubeModel = CubeModel.create(faces);
 
                 const moves = algorithm.algorithm;
@@ -201,7 +201,7 @@ window.onload = function() {
                 placeFace(vis, 4, 1, colors[backFace[0]]);
                 
                 let topFace = outputFaces[0];
-                topFace.forEach((color, index) => {
+                topFace.forEach((color: number, index: number) => {
                     const x = index % 3 + 2
                     const y = Math.floor(index / 3) + 2;
                     placeFace(vis, x, y, colors[color]);
