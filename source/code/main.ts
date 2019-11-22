@@ -203,12 +203,17 @@ function getMovement(model: any, pieceLocation: any)
 
 function drawArrow(svg: SVGElement, cube: any, pieceLocation: any): void {
     const movement = getMovement(cube, pieceLocation);
+    if(movement.orign.x == movement.moved.x
+        && movement.orign.y == movement.moved.y) {
+        return;
+    }
     const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line') as SVGLineElement;
     arrow.style.stroke = 'black';
     arrow.setAttribute('x1', (movement.orign.x * 100).toString());
     arrow.setAttribute('y1', (movement.orign.y * 100).toString());
     arrow.setAttribute('x2', (movement.moved.x * 100).toString());
     arrow.setAttribute('y2', (movement.moved.y * 100).toString());
+    arrow.setAttribute('marker-end', 'url(#arrow)');
     svg.appendChild(arrow);
 }
 
