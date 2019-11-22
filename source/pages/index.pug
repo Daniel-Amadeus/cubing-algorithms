@@ -15,4 +15,5 @@ body.bg-light
                     -let id = `${stepIndex}-${groupIndex}-${algorithmIndex}`
                     .row.p-3(id=`${id}`)
                         .cubeVis(id=`cubeVis-${id}`)
+                            svg.cubeAnnotation(width='100%' height='100%' viewbox='0 0 100 100')
                         p.my-auto.mx-3= algorithm.algorithm

@@ -16,6 +16,17 @@ const colors = [
     'white'
 ];
 
+let faces = [
+    [0,0,0,0,0,0,0,0,0],
+    [1,1,1,1,1,1,1,1,1],
+    [2,2,2,2,2,2,2,2,2],
+    [3,3,3,3,3,3,3,3,3],
+    [4,4,4,4,4,4,4,4,4],
+    [5,5,5,5,5,5,5,5,5]
+];
+
+const orignCube = CubeModel.create(faces);
+
 function invertMoves (moves: String): String{
     moves = moves.toLowerCase();
     moves = moves.replace(/[()]/g, '');
@@ -166,16 +177,54 @@ function placeFace(
     vis.appendChild(sticker);
 }
 
-window.onload = function() {
-    let faces = [
-        [0,0,0,0,0,0,0,0,0],
-        [1,1,1,1,1,1,1,1,1],
-        [2,2,2,2,2,2,2,2,2],
-        [3,3,3,3,3,3,3,3,3],
-        [4,4,4,4,4,4,4,4,4],
-        [5,5,5,5,5,5,5,5,5]
-    ];
+function getPoint(piece: any): {x: number, y: number} {
+    const position = piece.getStickerOnFace(FACES.TOP)._position;
+    const index = {
+        x: position % 3,
+        y: Math.floor(position / 3)
+    };
+    return {
+            x: (index.x + 1) / 4,
+            y: (index.y + 1) / 4,
+        }
+}
 
+function getMovement(model: any, pieceLocation: any)
+        : {
+            orign: {x: number, y: number},
+            moved: {x: number, y: number},
+        } {
+    const orignPiece = orignCube.getPieceByDestinationLocation(pieceLocation);
+    const movedPiece = model.getPieceByDestinationLocation(pieceLocation);
+    const orign = getPoint(orignPiece);
+    const moved = getPoint(movedPiece);
+    return {orign, moved};
+}
+
+function drawArrow(svg: SVGElement, cube: any, pieceLocation: any): void {
+    const movement = getMovement(cube, pieceLocation);
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line') as SVGLineElement;
+    arrow.style.stroke = 'black';
+    arrow.setAttribute('x1', (movement.orign.x * 100).toString());
+    arrow.setAttribute('y1', (movement.orign.y * 100).toString());
+    arrow.setAttribute('x2', (movement.moved.x * 100).toString());
+    arrow.setAttribute('y2', (movement.moved.y * 100).toString());
+    svg.appendChild(arrow);
+}
+
+function drawArrows(vis: HTMLDivElement, cube: any): void {
+    const svg = vis.getElementsByClassName('cubeAnnotation')[0] as SVGElement;
+    drawArrow(svg, cube, [FACES.TOP, FACES.BACK, FACES.RIGHT]);
+    drawArrow(svg, cube, [FACES.TOP, FACES.BACK, FACES.LEFT]);
+    drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.RIGHT]);
+    drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.LEFT]);
+    drawArrow(svg, cube, [FACES.TOP, FACES.RIGHT]);
+    drawArrow(svg, cube, [FACES.TOP, FACES.LEFT]);
+    drawArrow(svg, cube, [FACES.TOP, FACES.BACK]);
+    drawArrow(svg, cube, [FACES.TOP, FACES.FRONT]);
+}
+
+window.onload = function() {
     data.steps.forEach((step: any, stepIndex: number) => {
         const classes = [step.short];
         step.algorithmGroups.forEach((group: any, groupIndex: number) => {
@@ -192,6 +241,9 @@ window.onload = function() {
 
                 const moves = algorithm.algorithm;
                 applyMoves(cubeModel, invertMoves(moves));
+                if(step.short == 'pll'){
+                    drawArrows(vis, cubeModel);
+                }
 
                 let outputFaces = cubeModel.getFacesArray();
                 
