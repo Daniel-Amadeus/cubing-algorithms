@@ -18,6 +18,7 @@
         var(--sideWidth);
     gap: 2px;
     background-color: rgb(37, 37, 37);
+    filter: saturate(80%);
 }
 
 .cubeFace{
