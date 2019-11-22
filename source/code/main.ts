@@ -7,6 +7,9 @@ const FACEROTATIONS = constants.FACEROTATIONS;
 const CUBEROTATIONS = constants.CUBEROTATIONS;
 const data = require('../algorithms.json');
 
+type Point = {x: number, y: number};
+type Line = {start: Point, end: Point};
+
 const colors = [
     'yellow',
     'blue',
@@ -177,7 +180,7 @@ function placeFace(
     vis.appendChild(sticker);
 }
 
-function getPoint(piece: any): {x: number, y: number} {
+function getPoint(piece: any): Point {
     const position = piece.getStickerOnFace(FACES.TOP)._position;
     const index = {
         x: position % 3,
@@ -189,30 +192,28 @@ function getPoint(piece: any): {x: number, y: number} {
         }
 }
 
-function getMovement(model: any, pieceLocation: any)
-        : {
-            orign: {x: number, y: number},
-            moved: {x: number, y: number},
-        } {
+function getMovement(model: any, pieceLocation: any): Line {
     const orignPiece = orignCube.getPieceByDestinationLocation(pieceLocation);
     const movedPiece = model.getPieceByDestinationLocation(pieceLocation);
-    const orign = getPoint(orignPiece);
-    const moved = getPoint(movedPiece);
-    return {orign, moved};
+    const start = getPoint(orignPiece);
+    const end = getPoint(movedPiece);
+    return {start, end};
 }
+
+// function shortenLine(line: {orign})
 
 function drawArrow(svg: SVGElement, cube: any, pieceLocation: any): void {
     const movement = getMovement(cube, pieceLocation);
-    if(movement.orign.x == movement.moved.x
-        && movement.orign.y == movement.moved.y) {
+    if(movement.start.x == movement.end.x
+        && movement.start.y == movement.end.y) {
         return;
     }
     const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line') as SVGLineElement;
     arrow.style.stroke = 'black';
-    arrow.setAttribute('x1', (movement.orign.x * 100).toString());
-    arrow.setAttribute('y1', (movement.orign.y * 100).toString());
-    arrow.setAttribute('x2', (movement.moved.x * 100).toString());
-    arrow.setAttribute('y2', (movement.moved.y * 100).toString());
+    arrow.setAttribute('x1', (movement.start.x * 100).toString());
+    arrow.setAttribute('y1', (movement.start.y * 100).toString());
+    arrow.setAttribute('x2', (movement.end.x * 100).toString());
+    arrow.setAttribute('y2', (movement.end.y * 100).toString());
     arrow.setAttribute('marker-end', 'url(#arrow)');
     svg.appendChild(arrow);
 }
