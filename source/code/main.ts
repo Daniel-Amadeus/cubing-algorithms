@@ -200,14 +200,23 @@ function getMovement(model: any, pieceLocation: any): Line {
     return {start, end};
 }
 
-// function shortenLine(line: {orign})
+function shortenLine(line: Line, amount = 15): Line {
+    const diffX = (line.end.x - line.start.x) * (amount) / 100;
+    const diffY = (line.end.y - line.start.y) * (amount) / 100;
+    line.start.x += diffX;
+    line.start.y += diffY;
+    line.end.x -= diffX;
+    line.end.y -= diffY;
+    return line;
+}
 
 function drawArrow(svg: SVGElement, cube: any, pieceLocation: any): void {
-    const movement = getMovement(cube, pieceLocation);
+    let movement = getMovement(cube, pieceLocation);
     if(movement.start.x == movement.end.x
         && movement.start.y == movement.end.y) {
         return;
     }
+    movement = shortenLine(movement);
     const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line') as SVGLineElement;
     arrow.style.stroke = 'black';
     arrow.setAttribute('x1', (movement.start.x * 100).toString());
