@@ -6,8 +6,7 @@ html
 body.bg-light
     .content.container
         h1 Deus' Cubing Algorithms
-        p This page will show the algorithms I use and teach to solve twisty puzzles. More infos can be found here: 
-            a(href='https://speedcube.de') speedcube.de
+        p This page will show the algorithms I use and teach to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
         each step, stepIndex in data.steps
             h2= step.name
             each group, groupIndex in step.algorithmGroups
