@@ -223,7 +223,7 @@ function drawArrow(svg: SVGElement, cube: any, pieceLocation: any): void {
     arrow.setAttribute('y1', (movement.start.y * 100).toString());
     arrow.setAttribute('x2', (movement.end.x * 100).toString());
     arrow.setAttribute('y2', (movement.end.y * 100).toString());
-    arrow.setAttribute('marker-end', 'url(#arrow)');
+    arrow.setAttribute('marker-start', 'url(#arrow)');
     svg.appendChild(arrow);
 }
 
