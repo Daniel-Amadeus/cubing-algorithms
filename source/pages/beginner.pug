@@ -7,11 +7,10 @@ body.bg-light
         each step, stepIndex in data.steps
             h2= step.name
             each group, groupIndex in step.algorithmGroups
-                //- h3= group.name
                 each algorithm, algorithmIndex in group.algorithms
                     if algorithm.beginner
                         -let id = `${stepIndex}-${groupIndex}-${algorithmIndex}`
                         .row.p-3(id=`${id}`)
                             .cubeVis(id=`cubeVis-${id}`)
                                 include partials/cubeAnnotation.pug
-                            p.my-auto.mx-3= algorithm.algorithm
+                            p.my-auto.mx-3.col= algorithm.algorithm
