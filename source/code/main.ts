@@ -246,12 +246,12 @@ window.onload = function() {
             group.algorithms.forEach(
                     (algorithm: any, algorithmIndex: number) => {
                 const id = stepIndex + '-' + groupIndex + '-' + algorithmIndex;
-                const row = document.getElementById(id) as HTMLDivElement;
-                if(algorithm.beginner)
-                    row.classList.add('mark');
 
                 const vis = document
                     .getElementById('cubeVis-' + id) as HTMLDivElement;
+                if(!vis){
+                    return;
+                }
                 let cubeModel = CubeModel.create(faces);
 
                 const moves = algorithm.algorithm;

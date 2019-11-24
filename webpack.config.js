@@ -57,6 +57,16 @@ module.exports = {
             template: 'source/pages/index.pug',
             inject: false
         }),
+        new HtmlWebpackPlugin({
+            filename: 'beginner.html',
+            template: 'source/pages/beginner.pug',
+            inject: false
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'speed_cubing.html',
+            template: 'source/pages/speed_cubing.pug',
+            inject: false
+        }),
         new CopyWebpackPlugin([
             { from: 'source/css', to: 'css' }
         ]),

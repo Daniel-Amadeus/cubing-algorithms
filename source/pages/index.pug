@@ -4,16 +4,6 @@ html
         link(rel='stylesheet' type='text/css' href='css/style.css')
         script(src='main.js')
 body.bg-light
+    include partials/navbar.pug
     .content.container
-        h1 Deus' Cubing Algorithms
-        p This page will show the algorithms I use and teach to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
-        each step, stepIndex in data.steps
-            h2= step.name
-            each group, groupIndex in step.algorithmGroups
-                h3= group.name
-                each algorithm, algorithmIndex in group.algorithms
-                    -let id = `${stepIndex}-${groupIndex}-${algorithmIndex}`
-                    .row.p-3(id=`${id}`)
-                        .cubeVis(id=`cubeVis-${id}`)
-                            include partials/cubeAnnotation.pug
-                        p.my-auto.mx-3= algorithm.algorithm
+        p This page shows the algorithms I use and teach to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
