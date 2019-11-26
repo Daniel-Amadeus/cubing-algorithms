@@ -6,11 +6,13 @@ body.bg-light
         p This page shows the algorithms I teach to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
         each step, stepIndex in data.steps
             h2= step.name
-            each group, groupIndex in step.algorithmGroups
-                each algorithm, algorithmIndex in group.algorithms
-                    if algorithm.beginner
-                        -let id = `${stepIndex}-${groupIndex}-${algorithmIndex}`
-                        .row.p-3(id=`${id}`)
-                            .cubeVis(id=`cubeVis-${id}`)
-                                include partials/cubeAnnotation.pug
-                            p.my-auto.mx-3.col= algorithm.algorithm
+            .row
+                each group, groupIndex in step.algorithmGroups
+                    each algorithm, algorithmIndex in group.algorithms
+                        if algorithm.beginner
+                            -let id = `${stepIndex}-${groupIndex}-${algorithmIndex}`
+                            .col-md-6
+                                .row.p-3(id=`${id}`)
+                                    .cubeVis(id=`cubeVis-${id}`)
+                                        include partials/cubeAnnotation.pug
+                                    p.my-auto.mx-0.col= algorithm.algorithm
