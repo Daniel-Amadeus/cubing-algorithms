@@ -1,4 +1,7 @@
-
+.card-thumbnail {
+    height: 300px;
+    object-fit: cover;
+}
 
 .cubeVis {
     --faceWidth: 30px;

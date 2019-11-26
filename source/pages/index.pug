@@ -4,3 +4,18 @@ body.bg-light
     include partials/navbar.pug
     .content.container
         p This page shows the algorithms I #[a(href='speed_cubing.html') use] and #[a(href='beginner.html') teach] to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
+        .row
+            .col-6.p-3
+                .card.h-100
+                    img.card-img-top.card-thumbnail(src='img/beginner_thumbnail.png')
+                    .card-body.d-flex.flex-column
+                        h5.card-title Beginner
+                        p.card-text The algorithms I teach.
+                        a.btn.btn-primary.mt-auto(href='beginner.html') Los geht's
+            .col-6.p-3
+                .card.h-100
+                    img.card-img-top.card-thumbnail(src='img/speed-cubing_thumbnail.png')
+                    .card-body.d-flex.flex-column
+                        h5.card-title Speed Cubing
+                        p.card-text The algorithms I use.
+                        a.btn.btn-primary.mt-auto(href='beginner.html') Los geht's

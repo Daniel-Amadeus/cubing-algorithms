@@ -70,5 +70,8 @@ module.exports = {
         new CopyWebpackPlugin([
             { from: 'source/css', to: 'css' }
         ]),
+        new CopyWebpackPlugin([
+            { from: 'source/img', to: 'img' }
+        ]),
     ]
 };
