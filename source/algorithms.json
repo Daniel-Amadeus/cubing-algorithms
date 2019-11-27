@@ -32,11 +32,11 @@
                             "algorithm": "F' (Rw U R' U') (L' U R) x'"
                         },
                         {
-                            "algorithm": "(R U R') (U R U'2 R')",
-                            "beginner": true
+                            "algorithm": "(L U L') (U L U'2 L')"
                         },
                         {
-                            "algorithm": "(L' U' L) (U' L' U2 L)"
+                            "algorithm": "(R' U' R) (U' R' U2 R)",
+                            "beginner": true
                         },
                         {
                             "algorithm": "(R U'2) (R'2 U') (R2 U') (R'2 U'2 R)"
