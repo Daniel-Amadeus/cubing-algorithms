@@ -13,6 +13,7 @@ body.bg-light
                             -let id = `${stepIndex}-${groupIndex}-${algorithmIndex}`
                             .col-md-6
                                 .row.p-3(id=`${id}`)
-                                    .cubeVis(id=`cubeVis-${id}`)
+                                    .vis2d(id=`cubeVis-${id}`)
                                         include partials/cubeAnnotation.pug
+                                    canvas.vis3d.d-none
                                     p.my-auto.mx-0.col= algorithm.algorithm

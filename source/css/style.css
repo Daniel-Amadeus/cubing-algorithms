@@ -1,10 +1,21 @@
+:root {
+    --faceWidth: 30px;
+    --sideWidth: 15px;
+    --gapWidth: 2px;
+    --previewWidth: calc(var(--faceWidth) * 3 + var(--sideWidth) * 2 + var(--gapWidth) * 4);
+}
+
 .card-thumbnail {
     object-fit: cover;
 }
 
-.cubeVis {
-    --faceWidth: 30px;
-    --sideWidth: 15px;
+.vis3d {
+    background-color: red;
+    width: var(--previewWidth);
+    height: var(--previewWidth);
+}
+
+.vis2d {
     display: grid;
     grid-template-columns:
         var(--sideWidth)
@@ -18,7 +29,7 @@
         var(--faceWidth)
         var(--faceWidth)
         var(--sideWidth);
-    gap: 2px;
+    gap: var(--gapWidth);
     background-color: rgb(37, 37, 37);
     filter: saturate(80%);
 }

@@ -276,6 +276,17 @@ function drawCube(anchor: HTMLDivElement, cube: any, pll: boolean): void {
     });
 }
 
+function hideXShowY(x: string, y: string): void {
+    const vis2d = document.getElementsByClassName(x);
+    Array.from(vis2d).forEach(element => {
+        element.classList.add('d-none');
+    });
+    const vis3d = document.getElementsByClassName(y);
+    Array.from(vis3d).forEach(element => {
+        element.classList.remove('d-none');
+    });
+}
+
 window.onload = function() {
     const runner = new CubeRunner();
     const renderer = new CubeRenderer();
@@ -283,6 +294,16 @@ window.onload = function() {
     if (document.getElementById(canvasId)) {
         runner.initialize(canvasId, renderer);
     }
+
+    const button2d = document.getElementById('button2d');
+    button2d.onchange = (event) => {
+        hideXShowY('vis3d', 'vis2d');
+    };
+
+    const button3d = document.getElementById('button3d');
+    button3d.onchange = (event) => {
+        hideXShowY('vis2d', 'vis3d');
+    };
 
     data.steps.forEach((step: any, stepIndex: number) => {
         step.algorithmGroups.forEach((group: any, groupIndex: number) => {
