@@ -16,6 +16,10 @@ module.exports = {
                 exclude: /(source\/shaders|node_modules)/,
             },
             {
+                test: /\.(glsl|vert|frag)$/,
+                use: { loader: 'webpack-glsl-loader' },
+            },
+            {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },

@@ -1,5 +1,7 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {ExerciseRunner as CubeRunner} from './runner';
+import {CubeRenderer} from './renderer';
 const CubeModel = require('node-cube-model');
 const constants = CubeModel.constants;
 const FACES = constants.FACES;
@@ -275,6 +277,13 @@ function drawCube(anchor: HTMLDivElement, cube: any, pll: boolean): void {
 }
 
 window.onload = function() {
+    const runner = new CubeRunner();
+    const renderer = new CubeRenderer();
+    const canvasId = 'webgl-canvas';
+    if (document.getElementById(canvasId)) {
+        runner.initialize(canvasId, renderer);
+    }
+
     data.steps.forEach((step: any, stepIndex: number) => {
         step.algorithmGroups.forEach((group: any, groupIndex: number) => {
             group.algorithms.forEach(

@@ -4,6 +4,7 @@ body.bg-light
     include partials/navbar.pug
     .content.container
         p This page shows the algorithms I use to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
+        //- canvas#webgl-canvas
         each step, stepIndex in data.steps
             h2= step.name
             each group, groupIndex in step.algorithmGroups
