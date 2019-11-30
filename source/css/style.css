@@ -1,5 +1,5 @@
 :root {
-    --faceWidth: 30px;
+    --faceWidth: 50px;
     --sideWidth: 15px;
     --gapWidth: 2px;
     --previewWidth: calc(var(--faceWidth) * 3 + var(--sideWidth) * 2 + var(--gapWidth) * 4);

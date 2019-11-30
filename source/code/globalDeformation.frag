@@ -31,8 +31,10 @@ const int HAS_METALROUGHNESSMAP = 1 << 8;
 const int HAS_OCCLUSIONMAP      = 1 << 9;
 const int USE_TEX_LOD           = 1 << 10;
 
-const vec3 u_LightDirection = vec3(0.2, 1.0, 0.2);
-const vec3 u_LightColor = vec3(1, 1, 1);
+const vec3 u_LightDirection = vec3(0.2, 1.3, 0.5);
+const vec3 u_LightColor = vec3(7);
+
+const vec3 u_EnvironmentLight = vec3(0.5);
 
 const float M_PI = 3.141592653589793;
 const float c_MinRoughness = 0.04;
@@ -297,7 +299,7 @@ void main(void)
     vec3 diffuseContrib = (1.0 - F) * diffuse(pbrInputs);
     vec3 specContrib = F * G * D / (4.0 * NdotL * NdotV);
     // Obtain final intensity as reflectance (BRDF) scaled by the energy of the light (cosine law)
-    vec3 color = NdotL * u_LightColor * (diffuseContrib + specContrib);
+    vec3 color = (NdotL * u_LightColor + u_EnvironmentLight) * (diffuseContrib + specContrib);
 
     vec3 environmentLight = getIBLContribution(n, v, pbrInputs);
     color += environmentLight;

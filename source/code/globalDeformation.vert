@@ -182,10 +182,7 @@ void main(void)
         v_color = vec4(1.0);
     }
 
-    vec4 vertex = mold(a_position, u_moldFactor);
-    vertex = pinch(vertex, u_pinchFactor);
-    vertex = twist(vertex, u_twistAngle);
-    vertex = bend(vertex, u_bendAngle);
+    vec4 vertex = a_position;
 
     gl_Position = u_viewProjection * u_model * vertex;
 }

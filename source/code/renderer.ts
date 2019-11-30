@@ -21,6 +21,8 @@ import {
     Texture2D,
     TextureCube,
     Wizard,
+    SceneNode,
+    TransformComponent,
 } from 'webgl-operate';
 
 export class CubeRenderer extends Renderer {
@@ -70,11 +72,14 @@ export class CubeRenderer extends Renderer {
 
     protected _models = [
         {
-            name: 'Menger Schwamm',
-            uri: 'models/cube.glb',
+            uri: 'models/cube_0_2_2.glb',
+            rotation_x: 0
+        },
+        {
+            uri: 'models/cube_2_2_2.glb',
+            rotation_x: 3.1416
         }
     ];
-    protected _selectedModelIndex = 0;
 
     /**
      * Initializes and sets up rendering passes, navigation, loads a font face
@@ -333,15 +338,23 @@ export class CubeRenderer extends Renderer {
      * Load asset from URI specified by the HTML select
      */
     protected loadAsset(): void {
-        const uri = this._models[this._selectedModelIndex].uri;
-        this._forwardPass.scene = undefined;
+        this._forwardPass.scene = new SceneNode('root');
 
-        this._loader.uninitialize();
-        this._loader.loadAsset(uri)
-            .then(() => {
-                this._forwardPass.scene = this._loader.defaultScene;
-                this._invalidate(true);
-            });
+        for (let index = 0; index < this._models.length; index++) {
+            let model = this._models[index];
+            const uri = model.uri;
+            const loader = new GLTFLoader(this._context);
+            loader.uninitialize();
+            loader.loadAsset(uri)
+                .then(() => {
+                    const cubie = loader.defaultScene;
+                    const transformMatrix = mat4.fromXRotation(mat4.create(), model.rotation_x);
+                    const transform = new TransformComponent(transformMatrix);
+                    cubie.addComponent(transform);
+                    this._forwardPass.scene.addNode(cubie);
+                    this._invalidate(true);
+                });
+        };
     }
 
     /**
