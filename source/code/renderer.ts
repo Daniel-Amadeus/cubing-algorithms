@@ -70,6 +70,10 @@ export class CubeRenderer extends Renderer {
     protected _uSpecularEnvironment: WebGLUniformLocation;
     protected _uBRDFLookupTable: WebGLUniformLocation;
 
+    protected _updateRate = 10;
+    protected _animationProgress = 0;
+    protected _animationSpeed = 0.1; // progress/second
+
     protected _models = [
         {
             uri: 'models/cube_0_2_2.glb',
@@ -80,6 +84,9 @@ export class CubeRenderer extends Renderer {
             rotation_x: 3.1416
         }
     ];
+
+    protected _cubies: SceneNode[] = [];
+    protected _transforms: TransformComponent[] = [];
 
     /**
      * Initializes and sets up rendering passes, navigation, loads a font face
@@ -269,7 +276,25 @@ export class CubeRenderer extends Renderer {
         this.loadAsset();
         this.loadEnvironmentMap();
 
+        setInterval(this.updateAnimation.bind(this), 1000 / this._updateRate);
+
         return true;
+    }
+
+    protected updateAnimation(): void {
+        // TODO
+        // console.log(this._animationProgress);
+        this._cubies.forEach((cubie, index) => {
+            const model = this._models[index];
+            const transform = this._transforms[index];
+            const transformMatrix = mat4.fromXRotation(mat4.create(), this._animationProgress * model.rotation_x);
+            cubie.componentsOfType('TransformComponent')[0] = new TransformComponent(transformMatrix);
+        });
+        this._animationProgress += this._animationSpeed / this._updateRate;
+        if (this._animationProgress > 1) {
+            this._animationProgress = 0;
+        }
+        this.invalidate(true);
     }
 
     /**
@@ -351,6 +376,8 @@ export class CubeRenderer extends Renderer {
                     const transformMatrix = mat4.fromXRotation(mat4.create(), model.rotation_x);
                     const transform = new TransformComponent(transformMatrix);
                     cubie.addComponent(transform);
+                    this._cubies.push(cubie);
+                    this._transforms.push(transform);
                     this._forwardPass.scene.addNode(cubie);
                     this._invalidate(true);
                 });
