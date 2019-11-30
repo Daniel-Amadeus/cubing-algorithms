@@ -288,33 +288,49 @@ function hideXShowY(x: string, y: string): void {
 }
 
 window.onload = function() {
+
+    const openglCanvas = document.createElement('canvas');
+    openglCanvas.classList.add('vis3d');
+    openglCanvas.classList.add('d-none');
+    openglCanvas.id = 'vis3d';
+    document.getElementsByTagName('body')[0].appendChild(openglCanvas);
+
     const runner = new CubeRunner();
     const renderer = new CubeRenderer();
-    const canvasId = 'webgl-canvas';
-    if (document.getElementById(canvasId)) {
-        runner.initialize(canvasId, renderer);
+    const id3d = 'vis3d'
+    if (document.getElementById(id3d)) {
+        console.log('init renderer');
+        runner.initialize(id3d, renderer);
     }
 
-    const button2d = document.getElementById('button2d');
-    button2d.onchange = (event) => {
-        hideXShowY('vis3d', 'vis2d');
-    };
-
-    const button3d = document.getElementById('button3d');
-    button3d.onchange = (event) => {
-        hideXShowY('vis2d', 'vis3d');
-    };
-
+    const visList: HTMLElement[] = [];
     data.steps.forEach((step: any, stepIndex: number) => {
         step.algorithmGroups.forEach((group: any, groupIndex: number) => {
             group.algorithms.forEach(
                     (algorithm: any, algorithmIndex: number) => {
-                const id =
-                    `cubeVis-${stepIndex}-${groupIndex}-${algorithmIndex}`;
-                const vis = document.getElementById(id) as HTMLDivElement;
+                const id = `${stepIndex}-${groupIndex}-${algorithmIndex}`;
+                const id2d = `vis2d-${id}`
+                const vis = document.getElementById(id2d) as HTMLDivElement;
                 if(!vis){
                     return;
                 }
+                visList.push(vis);
+
+                vis.addEventListener('dblclick', (event) => {
+                    visList.forEach((element: HTMLElement) => {
+                        element.classList.remove('d-none');
+                        const parent = element.parentElement;
+                        const placeholder = parent.getElementsByClassName('placeholder')[0];
+                        placeholder.classList.add('d-none');
+                    });
+                    vis.classList.add('d-none');
+
+                    const parent = vis.parentElement;
+                    const placeholder = parent.getElementsByClassName('placeholder')[0];
+                    placeholder.appendChild(openglCanvas);
+                    openglCanvas.classList.remove('d-none');
+                    placeholder.classList.remove('d-none');
+                });
 
                 let cubeModel = CubeModel.create(faces);
                 const moves = algorithm.algorithm;
