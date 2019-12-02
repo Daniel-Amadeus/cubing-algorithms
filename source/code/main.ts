@@ -6,6 +6,7 @@ const FACES = constants.FACES;
 const FACEROTATIONS = constants.FACEROTATIONS;
 const CUBEROTATIONS = constants.CUBEROTATIONS;
 const data = require('../algorithms.json');
+const {Cube} = require('./cube');
 
 type Point = {x: number, y: number};
 type Line = {start: Point, end: Point};
@@ -286,11 +287,15 @@ window.onload = function() {
                     return;
                 }
 
-                let cubeModel = CubeModel.create(faces);
                 const moves = algorithm.algorithm;
-                applyMoves(cubeModel, invertMoves(moves));
 
-                drawCube(vis, cubeModel, step.short == 'pll');
+                // let cubeModel = CubeModel.create(faces);
+                // applyMoves(cubeModel, invertMoves(moves));
+                // drawCube(vis, cubeModel, step.short == 'pll');
+
+                let cube = new Cube();
+                cube.applyMoves(invertMoves(moves));
+                cube.drawCube(vis, step.short == 'pll');
             })
         })
     })
