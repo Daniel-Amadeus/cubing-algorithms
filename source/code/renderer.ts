@@ -162,6 +162,7 @@ export class CubeRenderer extends Renderer {
 
         this._navigation = new Navigation(callback, mouseEventProvider);
         this._navigation.camera = this._camera;
+        this._navigation.metaphor = Navigation.Metaphor.Turntable;
 
         /* Create and configure forward pass. */
 
