@@ -1,0 +1,11 @@
+mixin index_card(title, desc, thumbnail, link)
+    .col-6.p-3
+        .card.h-100
+            .embed-responsive.embed-responsive-4by3
+                img.card-img-top.card-thumbnail.embed-responsive-item(
+                    src=thumbnail
+                )
+            .card-body.d-flex.flex-column
+                h5.card-title= title
+                p.card-text= desc
+                a.btn.btn-primary.mt-auto(href=link) Let's go

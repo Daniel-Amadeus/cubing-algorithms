@@ -5,19 +5,18 @@ body.bg-light
     .content.container
         p This page shows the algorithms I #[a(href='speed_cubing.html') use] and #[a(href='beginner.html') teach] to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
         .row
-            .col-6.p-3
-                .card.h-100
-                    .embed-responsive.embed-responsive-4by3
-                        img.card-img-top.card-thumbnail.embed-responsive-item(src='https://github.com/Daniel-Amadeus/cubing-algorithms/raw/master/docs/img/beginner_thumbnail.png')
-                    .card-body.d-flex.flex-column
-                        h5.card-title Beginner
-                        p.card-text The algorithms I teach.
-                        a.btn.btn-primary.mt-auto(href='beginner.html') Let's go
-            .col-6.p-3
-                .card.h-100
-                    .embed-responsive.embed-responsive-4by3
-                        img.card-img-top.card-thumbnail.embed-responsive-item(src='https://github.com/Daniel-Amadeus/cubing-algorithms/raw/master/docs/img/speed-cubing_thumbnail.png')
-                    .card-body.d-flex.flex-column
-                        h5.card-title Speed Cubing
-                        p.card-text The algorithms I use.
-                        a.btn.btn-primary.mt-auto(href='speed_cubing.html') Let's go
+            include partials/indexCard.pug
+            +index_card(
+                'Beginner',
+                'The algorithms I teach.',
+                'https://github.com/Daniel-Amadeus/cubing-algorithms'
+                + '/raw/master/docs/img/beginner_thumbnail.png',
+                'beginner.html'
+            )
+            +index_card(
+                'Speed Cubing',
+                'The algorithms I use.',
+                'https://github.com/Daniel-Amadeus/cubing-algorithms'
+                + '/raw/master/docs/img/speed-cubing_thumbnail.png',
+                'speed_cubing.html'
+            )
