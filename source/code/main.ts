@@ -293,6 +293,16 @@ window.onload = function() {
     openglCanvas.classList.add('vis3d');
     openglCanvas.classList.add('d-none');
     openglCanvas.id = 'vis3d';
+    openglCanvas.addEventListener('dblclick', (event) => {
+        visList.forEach((element: HTMLElement) => {
+            element.classList.remove('d-none');
+            const parent = element.parentElement;
+            const placeholder = parent.getElementsByClassName('placeholder')[0];
+            placeholder.classList.add('d-none');
+        });
+        openglCanvas.classList.add('d-none');
+    });
+
     document.getElementsByTagName('body')[0].appendChild(openglCanvas);
 
     const runner = new CubeRunner();
