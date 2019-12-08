@@ -108,7 +108,6 @@ export class Cube {
             for(let x = 0; x < this._size; x++) {
                 let origin = vec3.fromValues(0, 0, 0);
                 let piece = this._pieces[z][y][x];
-                // let rot = mat4.fromRotation(mat4.create(), Math.PI/2, [1,0,0]);
                 let rot = mat4.fromQuat(mat4.create(), rotateUp);
                 piece = mat4.multiply(mat4.create(), rot, piece);
                 let pos = vec3.transformMat4(vec3.create(), origin, piece);
@@ -244,11 +243,16 @@ export class Cube {
     }
 
     drawCube(anchor: HTMLDivElement, pll: boolean): void {
+        let size = this._size;
+
         // if(pll){
         //     drawArrows(anchor);
         // }
 
-        let size = this._size;
+        let gridTemplate = `0.5fr repeat(${size}, 1fr) 0.5fr`;
+        anchor.style.gridTemplateColumns = gridTemplate;
+        anchor.style.gridTemplateRows = gridTemplate;
+
         let topFace_ = this.getFace(vec3.fromValues(0,1,0));
         topFace_.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
