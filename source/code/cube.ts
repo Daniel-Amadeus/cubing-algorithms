@@ -1,4 +1,4 @@
-import { mat4, vec3, vec4 } from 'gl-matrix';
+import { mat4, vec3, vec4, quat } from 'gl-matrix';
 
 
 type Swap = {faces: number[], stickers: number[][]};
@@ -58,8 +58,6 @@ export class Cube {
             this._pieces.push(slice);
         }
 
-        this.getFace(vec3.create());
-
         this._swaps.set('r', {
             faces: [0, 4, 5, 2],
             stickers: [[2, 6, 2, 2], [5, 3, 5, 5], [8, 0, 8, 8]]
@@ -86,7 +84,7 @@ export class Cube {
         });
     }
 
-    getColor(piece: mat4, face = [0, 1, 0]): string {
+    getColor(piece: mat4, face: vec3 = vec3.fromValues(0, 1, 0)): string {
         let origin = vec3.fromValues(0, 0, 0);
         let pos = vec3.transformMat4(vec3.create(), origin, piece);
         let translation = mat4.fromTranslation(mat4.create(), [-pos[0], -pos[1], -pos[2]]);
@@ -100,22 +98,25 @@ export class Cube {
         return color.color;
     }
 
-    getFace(direction: vec3): void {
+    getFace(direction: vec3 = vec3.fromValues(0, 1, 0)): mat4[][] {
+        let rotateUp = quat.rotationTo(quat.create(), [0, 1, 0], direction);
         let offset = (this._size - 1) / 2;
+        let face: mat4[][] = [];
         for(let z = 0; z < this._size; z++) {
-            for(let y = 0; y < this._size; y++) {
-                for(let x = 0; x < this._size; x++) {
-                    let origin = vec3.fromValues(0, 0, 0);
-                    let piece = this._pieces[z][y][x];
-                    // let rot = mat4.fromRotation(mat4.create(), Math.PI/2, [1,0,0]);
-                    // piece = mat4.multiply(mat4.create(), rot, piece);
-                    let pos = vec3.transformMat4(vec3.create(), origin, piece);
-                    if (pos[1] == offset) {
-                        console.log(this.getColor(piece));
-                    }
-                }
+            let y = this._size - 1;
+            let row: mat4[] = [];
+            for(let x = 0; x < this._size; x++) {
+                let origin = vec3.fromValues(0, 0, 0);
+                let piece = this._pieces[z][y][x];
+                // let rot = mat4.fromRotation(mat4.create(), Math.PI/2, [1,0,0]);
+                let rot = mat4.fromQuat(mat4.create(), rotateUp);
+                piece = mat4.multiply(mat4.create(), rot, piece);
+                let pos = vec3.transformMat4(vec3.create(), origin, piece);
+                row.push(piece);
             }
+            face.push(row);
         }
+        return face;
     }
 
     applyMoves(moves: string): void {
@@ -246,35 +247,34 @@ export class Cube {
         // if(pll){
         //     drawArrows(anchor);
         // }
-    
-        let outputFaces = this._faces;
-        let colors = this._colors;
-        
-        let leftFace = outputFaces[1];
-        this.placeFace(anchor, 1, 2, colors[leftFace[0]], pll);
-        this.placeFace(anchor, 1, 3, colors[leftFace[1]], pll);
-        this.placeFace(anchor, 1, 4, colors[leftFace[2]], pll);
-        
-        let frontFace = outputFaces[2];
-        this.placeFace(anchor, 2, 5, colors[frontFace[0]], pll);
-        this.placeFace(anchor, 3, 5, colors[frontFace[1]], pll);
-        this.placeFace(anchor, 4, 5, colors[frontFace[2]], pll);
-        
-        let rightFace = outputFaces[3];
-        this.placeFace(anchor, 5, 2, colors[rightFace[2]], pll);
-        this.placeFace(anchor, 5, 3, colors[rightFace[1]], pll);
-        this.placeFace(anchor, 5, 4, colors[rightFace[0]], pll);
-        
-        let backFace = outputFaces[4];
-        this.placeFace(anchor, 2, 1, colors[backFace[2]], pll);
-        this.placeFace(anchor, 3, 1, colors[backFace[1]], pll);
-        this.placeFace(anchor, 4, 1, colors[backFace[0]], pll);
-        
-        let topFace = outputFaces[0];
-        topFace.forEach((color: number, index: number) => {
-            const x = index % 3 + 2
-            const y = Math.floor(index / 3) + 2;
-            this.placeFace(anchor, x, y, colors[color], pll);
+
+        let size = this._size;
+        let topFace_ = this.getFace(vec3.fromValues(0,1,0));
+        topFace_.forEach((row: mat4[], y) => {
+            row.forEach((piece: mat4, x) => {
+                let color = this.getColor(piece);
+                this.placeFace(anchor, x + 2, y + 2, color, pll);
+            });
+
+            let firstPiece = row[0];
+            let firstColor = this.getColor(firstPiece, vec3.fromValues(-1, 0, 0));
+            this.placeFace(anchor, 1, y + 2, firstColor, pll);
+
+            let lastPiece = row[size-1];
+            let lastColor = this.getColor(lastPiece, vec3.fromValues(1, 0, 0));
+            this.placeFace(anchor, size + 2, y + 2, lastColor, pll);
+        });
+
+        topFace_[0].forEach((piece: mat4, x) => {
+            let firstPiece = topFace_[0][x];
+            let firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, -1));
+            this.placeFace(anchor, x + 2, 1, firstColor, pll);
+        });
+
+        topFace_[size-1].forEach((piece: mat4, x) => {
+            let firstPiece = topFace_[size-1][x];
+            let firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, 1));
+            this.placeFace(anchor, x + 2, size + 2, firstColor, pll);
         });
     }
 }
