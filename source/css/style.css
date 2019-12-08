@@ -10,6 +10,7 @@
     gap: 1%;
     background-color: rgb(37, 37, 37);
     filter: saturate(80%);
+    border-radius: 5px;
 }
 
 .cubeFace{
