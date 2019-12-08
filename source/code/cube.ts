@@ -58,6 +58,8 @@ export class Cube {
             this._pieces.push(slice);
         }
 
+        this.rotateLayer(vec3.fromValues(1, 0, 0));
+
         this._swaps.set('r', {
             faces: [0, 4, 5, 2],
             stickers: [[2, 6, 2, 2], [5, 3, 5, 5], [8, 0, 8, 8]]
@@ -99,23 +101,36 @@ export class Cube {
     }
 
     getFace(direction: vec3 = vec3.fromValues(0, 1, 0)): mat4[][] {
+        const size = this._size;
         let rotateUp = quat.rotationTo(quat.create(), [0, 1, 0], direction);
-        let offset = (this._size - 1) / 2;
-        let face: mat4[][] = [];
+        let offset = (size - 1) / 2;
+        let face: mat4[][] = Array(size).fill(0).map((e) => {return Array(size)});
         for(let z = 0; z < this._size; z++) {
-            let y = this._size - 1;
-            let row: mat4[] = [];
-            for(let x = 0; x < this._size; x++) {
-                let origin = vec3.fromValues(0, 0, 0);
-                let piece = this._pieces[z][y][x];
-                let rot = mat4.fromQuat(mat4.create(), rotateUp);
-                piece = mat4.multiply(mat4.create(), rot, piece);
-                let pos = vec3.transformMat4(vec3.create(), origin, piece);
-                row.push(piece);
+            for(let y = 0; y < size; y++) {
+                for(let x = 0; x < this._size; x++) {
+                    let origin = vec3.fromValues(0, 0, 0);
+                    let piece = this._pieces[z][y][x];
+                    let rot = mat4.fromQuat(mat4.create(), rotateUp);
+                    piece = mat4.multiply(mat4.create(), rot, piece);
+                    let pos = vec3.transformMat4(vec3.create(), origin, piece);
+                    if (eq(pos[1], offset)) {
+                        face[Math.round(pos[0]) + offset][Math.round(pos[2]) + offset] = piece;
+                    }
+                }
             }
-            face.push(row);
         }
         return face;
+    }
+
+    rotateLayer(direction: vec3): void {
+        const size = this._size;
+        for(let z = 0; z < size; z++) {
+            for(let y = 0; y < size; y++) {
+                for(let x = 0; x < size; x++) {
+                    
+                }
+            }
+        }
     }
 
     applyMoves(moves: string): void {
@@ -242,12 +257,24 @@ export class Cube {
         vis.appendChild(sticker);
     }
 
+    drawArrows(vis: HTMLDivElement): void {
+        const svg = vis.getElementsByClassName('cubeAnnotation')[0] as SVGElement;
+        // drawArrow(svg, cube, [FACES.TOP, FACES.BACK, FACES.RIGHT]);
+        // drawArrow(svg, cube, [FACES.TOP, FACES.BACK, FACES.LEFT]);
+        // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.RIGHT]);
+        // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.LEFT]);
+        // drawArrow(svg, cube, [FACES.TOP, FACES.RIGHT]);
+        // drawArrow(svg, cube, [FACES.TOP, FACES.LEFT]);
+        // drawArrow(svg, cube, [FACES.TOP, FACES.BACK]);
+        // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT]);
+    }
+
     drawCube(anchor: HTMLDivElement, pll: boolean): void {
         let size = this._size;
 
-        // if(pll){
-        //     drawArrows(anchor);
-        // }
+        if(pll){
+            this.drawArrows(anchor);
+        }
 
         let gridTemplate = `0.5fr repeat(${size}, 1fr) 0.5fr`;
         anchor.style.gridTemplateColumns = gridTemplate;
