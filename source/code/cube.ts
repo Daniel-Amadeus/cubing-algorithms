@@ -86,29 +86,32 @@ export class Cube {
         });
     }
 
+    getColor(piece: mat4, face = [0, 1, 0]): string {
+        let origin = vec3.fromValues(0, 0, 0);
+        let pos = vec3.transformMat4(vec3.create(), origin, piece);
+        let translation = mat4.fromTranslation(mat4.create(), [-pos[0], -pos[1], -pos[2]]);
+        let rotation = mat4.multiply(mat4.create(), piece, translation);
+        let up = vec4.fromValues(face[0], face[1], face[2], 0);
+        let direction = vec4.transformMat4(vec4.create(), up, rotation);
+        let color = this._colorMap.find((element: any) => {
+            let dir = element.direction;
+            return eq(dir[0], direction[0]) && eq(dir[1], direction[1]) && eq(dir[2], direction[2]);
+        });
+        return color.color;
+    }
+
     getFace(direction: vec3): void {
         let offset = (this._size - 1) / 2;
         for(let z = 0; z < this._size; z++) {
             for(let y = 0; y < this._size; y++) {
                 for(let x = 0; x < this._size; x++) {
                     let origin = vec3.fromValues(0, 0, 0);
-                    let up = vec4.fromValues(0, 1, 0, 0);
                     let piece = this._pieces[z][y][x];
-                    // console.log(piece);
-                    let rot = mat4.fromRotation(mat4.create(), Math.PI, [0,0,1]);
-                    //piece = mat4.rotateX(mat4.create(), piece, 3.1415927);
-                    piece = mat4.multiply(mat4.create(), rot, piece);
-                    // console.log(piece);
+                    // let rot = mat4.fromRotation(mat4.create(), Math.PI/2, [1,0,0]);
+                    // piece = mat4.multiply(mat4.create(), rot, piece);
                     let pos = vec3.transformMat4(vec3.create(), origin, piece);
-                    let translation = mat4.fromTranslation(mat4.create(), [-pos[0], -pos[1], -pos[2]]);
-                    let rotation = mat4.multiply(mat4.create(), piece, translation);
-                    let direction = vec4.transformMat4(vec4.create(), up, rotation);
                     if (pos[1] == offset) {
-                        let color = this._colorMap.find((element: any) => {
-                            let dir = element.direction;
-                            return eq(dir[0], direction[0]) && eq(dir[1], direction[1]) && eq(dir[2], direction[2]);
-                        });
-                        console.log(color);
+                        console.log(this.getColor(piece));
                     }
                 }
             }
