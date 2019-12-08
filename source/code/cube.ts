@@ -1,10 +1,20 @@
-import { reverse } from "dns";
+import { mat4, vec3, vec4 } from 'gl-matrix';
+
 
 type Swap = {faces: number[], stickers: number[][]};
 
+
+
+let epsilon = 0.01;
+function eq(x: number, y: number): boolean {
+    return Math.abs(x - y) < epsilon;
+}
+
 export class Cube {
+
+    private _size = 3;
     private _faces = Array(6).fill(0).map((e, i) => {return Array(9).fill(i)});
-    private _pieces = Array(27).fill(0).map((e, i) =>  {return i});
+    private _pieces: mat4[][][] = [];
 
     private _colors = [
         'yellow',
@@ -15,11 +25,41 @@ export class Cube {
         'white'
     ];
 
+    private _colorMap = [
+        {direction: [ 0, 1, 0], color: 'yellow'},
+        {direction: [ 0,-1, 0], color: 'white'},
+        {direction: [ 1, 0, 0], color: 'orange'},
+        {direction: [-1, 0, 0], color: 'red'},
+        {direction: [ 0, 0, 1], color: 'green'},
+        {direction: [ 0, 0,-1], color: 'blue'},
+    ]
+
     private _swaps = new Map<string, Swap>();
+    private _circleSwap = [[0, 2, 6, 8], [1, 3, 5, 7]];
     
-    constructor() {
-        // console.log(this._faces);
-        // console.log(this._pieces);
+    constructor(size = 3) {
+        this._size = size;
+        let offset = (size - 1) / 2;
+        for(let z = 0; z < size; z++) {
+            let slice: mat4[][] = [];
+            for(let y = 0; y < size; y++) {
+                let row: mat4[] = [];
+                for(let x = 0; x < size; x++) {
+                    row.push(mat4.fromTranslation(
+                            mat4.create(),
+                            [
+                                x - offset,
+                                y - offset,
+                                z - offset]
+                        ));
+                }
+            slice.push(row);
+            }
+            this._pieces.push(slice);
+        }
+
+        this.getFace(vec3.create());
+
         this._swaps.set('r', {
             faces: [0, 4, 5, 2],
             stickers: [[2, 6, 2, 2], [5, 3, 5, 5], [8, 0, 8, 8]]
@@ -36,6 +76,43 @@ export class Cube {
             faces: [0, 1, 5, 3],
             stickers: [[0, 6, 8, 2], [1, 3, 7, 5], [2, 0, 6, 8]]
         });
+        this._swaps.set('u', {
+            faces: [4, 3, 2, 1],
+            stickers: [[0, 0, 0, 0], [1, 1, 1, 1], [2, 2, 2, 2]]
+        });
+        this._swaps.set('d', {
+            faces: [1, 2, 3, 4],
+            stickers: [[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]]
+        });
+    }
+
+    getFace(direction: vec3): void {
+        let offset = (this._size - 1) / 2;
+        for(let z = 0; z < this._size; z++) {
+            for(let y = 0; y < this._size; y++) {
+                for(let x = 0; x < this._size; x++) {
+                    let origin = vec3.fromValues(0, 0, 0);
+                    let up = vec4.fromValues(0, 1, 0, 0);
+                    let piece = this._pieces[z][y][x];
+                    // console.log(piece);
+                    let rot = mat4.fromRotation(mat4.create(), Math.PI, [0,0,1]);
+                    //piece = mat4.rotateX(mat4.create(), piece, 3.1415927);
+                    piece = mat4.multiply(mat4.create(), rot, piece);
+                    // console.log(piece);
+                    let pos = vec3.transformMat4(vec3.create(), origin, piece);
+                    let translation = mat4.fromTranslation(mat4.create(), [-pos[0], -pos[1], -pos[2]]);
+                    let rotation = mat4.multiply(mat4.create(), piece, translation);
+                    let direction = vec4.transformMat4(vec4.create(), up, rotation);
+                    if (pos[1] == offset) {
+                        let color = this._colorMap.find((element: any) => {
+                            let dir = element.direction;
+                            return eq(dir[0], direction[0]) && eq(dir[1], direction[1]) && eq(dir[2], direction[2]);
+                        });
+                        console.log(color);
+                    }
+                }
+            }
+        }
     }
 
     applyMoves(moves: string): void {
