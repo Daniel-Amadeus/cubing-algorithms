@@ -37,7 +37,7 @@ export class Cube {
     private _swaps = new Map<string, Swap>();
     private _circleSwap = [[0, 2, 6, 8], [1, 3, 5, 7]];
     
-    constructor(size = 3) {
+    constructor(size = 2) {
         this._size = size;
         let offset = (size - 1) / 2;
         for(let z = 0; z < size; z++) {
@@ -45,13 +45,15 @@ export class Cube {
             for(let y = 0; y < size; y++) {
                 let row: mat4[] = [];
                 for(let x = 0; x < size; x++) {
-                    row.push(mat4.fromTranslation(
-                            mat4.create(),
-                            [
-                                x - offset,
-                                y - offset,
-                                z - offset]
-                        ));
+                    let mat = mat4.fromTranslation(
+                        mat4.create(),
+                        [
+                            x - offset,
+                            y - offset,
+                            z - offset]
+                    );
+                    (mat as any).index = {x: x - offset, y: y - offset, z: z - offset};
+                    row.push(mat);
                 }
             slice.push(row);
             }
@@ -59,6 +61,8 @@ export class Cube {
         }
 
         this.rotateLayer(vec3.fromValues(1, 0, 0));
+        console.log(this._pieces);
+        // this.getLayer();
 
         this._swaps.set('r', {
             faces: [0, 4, 5, 2],
@@ -100,21 +104,30 @@ export class Cube {
         return color.color;
     }
 
-    getFace(direction: vec3 = vec3.fromValues(0, 1, 0)): mat4[][] {
+    getLayer(direction: vec3 = vec3.fromValues(0, 1, 0), layer: number = 0): mat4[][] {
+        console.log('getLayer');
         const size = this._size;
-        let rotateUp = quat.rotationTo(quat.create(), [0, 1, 0], direction);
-        let offset = (size - 1) / 2;
-        let face: mat4[][] = Array(size).fill(0).map((e) => {return Array(size)});
+        if (layer >= size ) {
+            console.warn(`Can not rotate layer ${layer} of a cube-${size}.`);
+            return;
+        }
+        const origin = vec3.fromValues(0, 0, 0);
+        const rotateUp = quat.rotationTo(quat.create(), direction, [0, 1, 0]);
+        const rot = mat4.fromQuat(mat4.create(), rotateUp);
+        console.log(rot);
+        const offset = (size - 1) / 2;
+        const face: mat4[][] = Array(size).fill(0).map((e) => {return Array(size)});
         for(let z = 0; z < this._size; z++) {
             for(let y = 0; y < size; y++) {
                 for(let x = 0; x < this._size; x++) {
-                    let origin = vec3.fromValues(0, 0, 0);
                     let piece = this._pieces[z][y][x];
-                    let rot = mat4.fromQuat(mat4.create(), rotateUp);
                     piece = mat4.multiply(mat4.create(), rot, piece);
                     let pos = vec3.transformMat4(vec3.create(), origin, piece);
-                    if (eq(pos[1], offset)) {
-                        face[Math.round(pos[0]) + offset][Math.round(pos[2]) + offset] = piece;
+                    // console.log({oldPie: this._pieces[z][y][x], piece});
+                        console.log((this._pieces[z][y][x] as any).index);
+                        console.log(pos);
+                    if (eq(pos[1] + offset, size - layer - 1)) {
+                        face[Math.round(pos[0] + offset)][Math.round(pos[2] + offset)] = this._pieces[z][y][x];
                     }
                 }
             }
@@ -122,15 +135,24 @@ export class Cube {
         return face;
     }
 
+    getPos(piece: mat4): vec3 {
+        const origin = vec3.fromValues(0, 0, 0);
+        return vec3.transformMat4(vec3.create(), origin, piece);
+    }
+
+    getFace(direction: vec3 = vec3.fromValues(0, 1, 0)): mat4[][] {
+        console.log('get face');
+        return this.getLayer(direction);
+    }
+
     rotateLayer(direction: vec3): void {
-        const size = this._size;
-        for(let z = 0; z < size; z++) {
-            for(let y = 0; y < size; y++) {
-                for(let x = 0; x < size; x++) {
-                    
-                }
-            }
-        }
+        let rotation = mat4.fromRotation(mat4.create(), Math.PI/2, direction);
+        let layer = this.getLayer(direction, 0);
+        layer.forEach((row: mat4[], y) => {
+            row.forEach((piece: mat4, x) => {
+                mat4.multiply(piece, rotation, piece);
+            });
+        });
     }
 
     applyMoves(moves: string): void {
@@ -271,6 +293,7 @@ export class Cube {
 
     drawCube(anchor: HTMLDivElement, pll: boolean): void {
         let size = this._size;
+        let offset = (size - 1) / 2;
 
         if(pll){
             this.drawArrows(anchor);
@@ -280,11 +303,14 @@ export class Cube {
         anchor.style.gridTemplateColumns = gridTemplate;
         anchor.style.gridTemplateRows = gridTemplate;
 
-        let topFace_ = this.getFace(vec3.fromValues(0,1,0));
-        topFace_.forEach((row: mat4[], y) => {
+        let topFace = this.getFace(vec3.fromValues(0,1,0));
+        topFace.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
-                let color = this.getColor(piece);
-                this.placeFace(anchor, x + 2, y + 2, color, pll);
+                const color = this.getColor(piece);
+                const pos = this.getPos(piece);
+                const xIndex = pos[0] + offset;
+                const yIndex = pos[2] + offset;
+                this.placeFace(anchor, xIndex + 2, yIndex + 2, color, pll);
             });
 
             let firstPiece = row[0];
@@ -296,14 +322,14 @@ export class Cube {
             this.placeFace(anchor, size + 2, y + 2, lastColor, pll);
         });
 
-        topFace_[0].forEach((piece: mat4, x) => {
-            let firstPiece = topFace_[0][x];
+        topFace[0].forEach((piece: mat4, x) => {
+            let firstPiece = topFace[0][x];
             let firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, -1));
             this.placeFace(anchor, x + 2, 1, firstColor, pll);
         });
 
-        topFace_[size-1].forEach((piece: mat4, x) => {
-            let firstPiece = topFace_[size-1][x];
+        topFace[size-1].forEach((piece: mat4, x) => {
+            let firstPiece = topFace[size-1][x];
             let firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, 1));
             this.placeFace(anchor, x + 2, size + 2, firstColor, pll);
         });
