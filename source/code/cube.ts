@@ -24,7 +24,7 @@ export class Cube {
     
     constructor(size = 3) {
         this._size = size;
-        let offset = (size - 1) / 2;
+        let offset = this.offset();
         for(let z = 0; z < size; z++) {
             let slice: mat4[][] = [];
             for(let y = 0; y < size; y++) {
@@ -46,6 +46,10 @@ export class Cube {
         }
     }
 
+    offset(): number {
+        return (this._size - 1) / 2;
+    }
+
     getColor(piece: mat4, face: vec3 = vec3.fromValues(0, 1, 0)): string {
         let pos = this.getPos(piece);
         let translation = mat4.fromTranslation(mat4.create(), [-pos[0], -pos[1], -pos[2]]);
@@ -62,21 +66,20 @@ export class Cube {
 
     getLayer(direction: vec3 = vec3.fromValues(0, 1, 0), layer: number = 0): mat4[][] {
         const size = this._size;
+        const offset = this.offset();
         if (layer >= size ) {
             console.warn(`Can not rotate layer ${layer} of a cube-${size}.`);
             return;
         }
-        const origin = vec3.fromValues(0, 0, 0);
         const rotateUp = quat.rotationTo(quat.create(), direction, [0, 1, 0]);
         const rot = mat4.fromQuat(mat4.create(), rotateUp);
-        const offset = (size - 1) / 2;
         const face: mat4[][] = Array(size).fill(0).map((e) => {return Array(size)});
         for(let z = 0; z < this._size; z++) {
             for(let y = 0; y < size; y++) {
                 for(let x = 0; x < this._size; x++) {
                     let piece = this._pieces[z][y][x];
                     piece = mat4.multiply(mat4.create(), rot, piece);
-                    let pos = vec3.transformMat4(vec3.create(), origin, piece);
+                    let pos = this.getPos(piece);
                     if (eq(pos[1] + offset, size - layer - 1)) {
                         face[Math.round(pos[2] + offset)][Math.round(pos[0] + offset)] = this._pieces[z][y][x];
                     }
@@ -188,7 +191,7 @@ export class Cube {
     }
 
     getMovement(face: mat4[][], x: number, y: number): Line {
-        let offset = (this._size - 1) / 2;
+        const offset = this.offset();
         const start = {
             x: (x + 1) / (this._size + 1),
             y: (y + 1) / (this._size + 1)
