@@ -7,19 +7,22 @@
     "doc": "docs"
   },
   "dependencies": {
+    "@types/gl-matrix": "^2.4.5",
     "bootstrap": "^4.3.1",
     "copy-webpack-plugin": "^5.0.5",
     "css-loader": "^3.2.0",
+    "gl-matrix": "^3.1.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "jquery": "^3.4.1",
-    "node-cube-model": "^0.4.0",
     "popper.js": "^1.16.0",
     "pug": "^2.0.4",
     "pug-html-loader": "^1.1.5",
+    "rxjs": "^6.5.3",
     "style-loader": "^1.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.2",
+    "webgl-operate": "git+https://github.com/cginternals/webgl-operate.git#ca45d845a5e34594750c90b94cd592c2e79716fd",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
