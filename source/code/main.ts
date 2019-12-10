@@ -294,7 +294,7 @@ window.onload = function() {
                 // drawCube(vis, cubeModel, step.short == 'pll');
 
                 let cube = new Cube();
-                // cube.applyMoves(invertMoves(moves));
+                cube.applyMoves(invertMoves(moves));
                 cube.drawCube(vis, step.short == 'pll');
             })
         })

@@ -26,12 +26,12 @@ export class Cube {
     ];
 
     private _colorMap = [
-        {direction: [ 0, 1, 0], color: 'yellow'},
-        {direction: [ 0,-1, 0], color: 'white'},
-        {direction: [ 1, 0, 0], color: 'orange'},
-        {direction: [-1, 0, 0], color: 'red'},
-        {direction: [ 0, 0, 1], color: 'green'},
-        {direction: [ 0, 0,-1], color: 'blue'},
+        {direction: vec3.fromValues( 0, 1, 0), color: 'yellow', side: 'u'},
+        {direction: vec3.fromValues( 0,-1, 0), color: 'white', side: 'd'},
+        {direction: vec3.fromValues( 1, 0, 0), color: 'orange', side: 'r'},
+        {direction: vec3.fromValues(-1, 0, 0), color: 'red', side: 'l'},
+        {direction: vec3.fromValues( 0, 0,-1), color: 'blue', side: 'b'},
+        {direction: vec3.fromValues( 0, 0, 1), color: 'green', side: 'f'},
     ]
 
     private _swaps = new Map<string, Swap>();
@@ -60,10 +60,10 @@ export class Cube {
             this._pieces.push(slice);
         }
 
-        this.rotateLayer(vec3.fromValues(1, 0, 0));
-        this.rotateLayer(vec3.fromValues(0, 1, 0));
-        this.rotateLayer(vec3.fromValues(0, 0, 1));
-        console.log(this._pieces);
+        // this.rotateLayer(vec3.fromValues(1, 0, 0));
+        // this.rotateLayer(vec3.fromValues(0, 1, 0));
+        // this.rotateLayer(vec3.fromValues(0, 0, 1));
+        // console.log(this._pieces);
         // this.getLayer();
 
         this._swaps.set('r', {
@@ -107,7 +107,7 @@ export class Cube {
     }
 
     getLayer(direction: vec3 = vec3.fromValues(0, 1, 0), layer: number = 0): mat4[][] {
-        console.log('getLayer');
+        // console.log('getLayer');
         const size = this._size;
         if (layer >= size ) {
             console.warn(`Can not rotate layer ${layer} of a cube-${size}.`);
@@ -116,7 +116,7 @@ export class Cube {
         const origin = vec3.fromValues(0, 0, 0);
         const rotateUp = quat.rotationTo(quat.create(), direction, [0, 1, 0]);
         const rot = mat4.fromQuat(mat4.create(), rotateUp);
-        console.log(rot);
+        // console.log(rot);
         const offset = (size - 1) / 2;
         const face: mat4[][] = Array(size).fill(0).map((e) => {return Array(size)});
         for(let z = 0; z < this._size; z++) {
@@ -127,9 +127,9 @@ export class Cube {
                     let pos = vec3.transformMat4(vec3.create(), origin, piece);
                     // console.log({oldPie: this._pieces[z][y][x], piece});
                     if (eq(pos[1] + offset, size - layer - 1)) {
-                        console.log({x: Math.round(pos[0] + offset), y: Math.round(pos[2] + offset)});
-                        console.log((this._pieces[z][y][x] as any).index);
-                        console.log(pos);
+                        // console.log({x: Math.round(pos[0] + offset), y: Math.round(pos[2] + offset)});
+                        // console.log((this._pieces[z][y][x] as any).index);
+                        // console.log(pos);
                         face[Math.round(pos[2] + offset)][Math.round(pos[0] + offset)] = this._pieces[z][y][x];
                     }
                 }
@@ -144,12 +144,12 @@ export class Cube {
     }
 
     getFace(direction: vec3 = vec3.fromValues(0, 1, 0)): mat4[][] {
-        console.log('get face');
+        // console.log('get face');
         return this.getLayer(direction);
     }
 
-    rotateLayer(direction: vec3): void {
-        let rotation = mat4.fromRotation(mat4.create(), Math.PI/2, direction);
+    rotateLayer(direction: vec3, amount = 1): void {
+        let rotation = mat4.fromRotation(mat4.create(), -amount * Math.PI/2, direction);
         let layer = this.getLayer(direction, 0);
         layer.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
@@ -164,10 +164,22 @@ export class Cube {
         moves = moves.replace(/[()]/g, '');
         const movesArray = moves.split(' ');
         movesArray.forEach(move => {
+            if (!move) return;
             const mainMove = move[0];
-            let twoLayers = move.includes('w');
             let inverted = move.includes("'");
             let double = move.includes('2');
+            let twoLayers = move.includes('w');
+
+            let amount = 1;
+            if (inverted) amount *= -1;
+            if (double) amount *= 2;
+
+            // console.log(move);
+
+            let sideData = this._colorMap.find((e) => {return e.side == mainMove});
+            if (sideData) {
+                this.rotateLayer(sideData.direction, amount);
+            }
 
             // let direction = invertDirection(FACEROTATIONS.CW, inverted);
             for(let i = 0; i < (double ? 2 : 1); i++){
@@ -179,7 +191,7 @@ export class Cube {
                 let stickers = swap.stickers;
 
                 if (inverted) {
-                    console.log('inverted');
+                    // console.log('inverted');
                     faces = faces.reverse();
                     stickers.map(e => {return e.reverse()});
                 }
@@ -262,7 +274,7 @@ export class Cube {
                 // }
             }
         });
-        console.log(this._faces);
+        // console.log(this._faces);
     }
 
     placeFace(
@@ -310,17 +322,17 @@ export class Cube {
         anchor.style.gridTemplateRows = gridTemplate;
 
         let topFace = this.getFace(vec3.fromValues(0,1,0));
-        console.log('faces');
+        // console.log('faces');
         topFace.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
-                console.log({x,y});
-                console.log((piece as any).index);
+                // console.log({x,y});
+                // console.log((piece as any).index);
                 const color = this.getColor(piece);
                 const pos = this.getPos(piece);
-                console.log(pos);
+                // console.log(pos);
                 // const xIndex = pos[0] + offset;
                 // const yIndex = pos[2] + offset;
-                this.placeFace(anchor, x + 2, y + 2, color, pll, piece);
+                this.placeFace(anchor, x + 2, y + 2, color, pll);
             });
 
             let firstPiece = row[0];
