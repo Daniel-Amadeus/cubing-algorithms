@@ -3,28 +3,19 @@
 }
 
 .cubeVis {
-    --faceWidth: 30px;
-    --sideWidth: 15px;
+    --size: 150px;
+    width: var(--size);
+    height: var(--size);
     display: grid;
-    grid-template-columns:
-        var(--sideWidth)
-        var(--faceWidth)
-        var(--faceWidth)
-        var(--faceWidth)
-        var(--sideWidth);
-    grid-template-rows:
-        var(--sideWidth)
-        var(--faceWidth)
-        var(--faceWidth)
-        var(--faceWidth)
-        var(--sideWidth);
-    gap: 2px;
+    gap: 1%;
     background-color: rgb(37, 37, 37);
     filter: saturate(80%);
+    border-radius: 5px;
 }
 
 .cubeFace{
     background-color: transparent;
+    border-radius: 3px;
 }
 
 .oll {
@@ -33,10 +24,8 @@
 
 .cubeAnnotation {
     z-index: 1;
-    grid-column-start: 1;
-    grid-column-end: 6;
-    grid-row-start: 1;
-    grid-row-end: 6;
+    grid-column: 1/-1;
+    grid-row: 1/-1;
 }
 
 .cubeFace.yellow {
