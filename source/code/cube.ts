@@ -1,4 +1,7 @@
 import { mat4, vec3, vec4, quat } from 'gl-matrix';
+import { gl_matrix_extensions } from 'webgl-operate';
+const { v3, v4, m4 } = gl_matrix_extensions;
+
 
 let epsilon = 0.01;
 function eq(x: number, y: number): boolean {
@@ -13,7 +16,7 @@ export class Cube {
     private _size = 3;
     private _pieces: mat4[][][] = [];
 
-    private _colorMap = [
+    private readonly _colorMap = [
         {direction: vec3.fromValues( 0, 1, 0), side: 'u', center: ' ', rotation: 'y', color: 'yellow'},
         {direction: vec3.fromValues( 0,-1, 0), side: 'd', center: 'e', rotation: ' ', color: 'white'},
         {direction: vec3.fromValues( 1, 0, 0), side: 'r', center: ' ', rotation: 'x', color: 'orange'},
@@ -24,20 +27,19 @@ export class Cube {
     
     constructor(size = 3) {
         this._size = size;
-        let offset = this.offset();
+        const offset = this.offset();
         for(let z = 0; z < size; z++) {
-            let slice: mat4[][] = [];
+            const slice: mat4[][] = [];
             for(let y = 0; y < size; y++) {
-                let row: mat4[] = [];
+                const row: mat4[] = [];
                 for(let x = 0; x < size; x++) {
-                    let mat = mat4.fromTranslation(
-                        mat4.create(),
+                    const mat = mat4.fromTranslation(
+                        m4(),
                         [
                             x - offset,
                             y - offset,
                             z - offset]
                     );
-                    (mat as any).index = {x: x - offset, y: y - offset, z: z - offset};
                     row.push(mat);
                 }
             slice.push(row);
@@ -51,14 +53,14 @@ export class Cube {
     }
 
     getColor(piece: mat4, face: vec3 = vec3.fromValues(0, 1, 0)): string {
-        let pos = this.getPos(piece);
-        let translation = mat4.fromTranslation(mat4.create(), [-pos[0], -pos[1], -pos[2]]);
-        let rotation = mat4.multiply(mat4.create(), piece, translation);
+        const pos = this.getPos(piece);
+        const translation = mat4.fromTranslation(m4(), vec3.negate(v3(), pos));
+        const rotation = mat4.multiply(m4(), piece, translation);
         mat4.invert(rotation, rotation);
-        let up = vec4.fromValues(face[0], face[1], face[2], 0);
-        let direction = vec4.transformMat4(vec4.create(), up, rotation);
-        let color = this._colorMap.find((element: any) => {
-            let dir = element.direction;
+        const up = vec4.fromValues(face[0], face[1], face[2], 0);
+        const direction = vec4.transformMat4(v4(), up, rotation);
+        const color = this._colorMap.find((element: any) => {
+            const dir = element.direction;
             return eq(dir[0], direction[0]) && eq(dir[1], direction[1]) && eq(dir[2], direction[2]);
         });
         return color.color;
@@ -72,13 +74,13 @@ export class Cube {
             return;
         }
         const rotateUp = quat.rotationTo(quat.create(), direction, [0, 1, 0]);
-        const rot = mat4.fromQuat(mat4.create(), rotateUp);
-        const face: mat4[][] = Array(size).fill(0).map((e) => {return Array(size)});
+        const rot = mat4.fromQuat(m4(), rotateUp);
+        const face: mat4[][] = Array(size).fill(0).map(() => {return Array(size)});
         for(let z = 0; z < this._size; z++) {
             for(let y = 0; y < size; y++) {
                 for(let x = 0; x < this._size; x++) {
                     let piece = this._pieces[z][y][x];
-                    piece = mat4.multiply(mat4.create(), rot, piece);
+                    piece = mat4.multiply(m4(), rot, piece);
                     let pos = this.getPos(piece);
                     if (eq(pos[1] + offset, size - layer - 1)) {
                         face[Math.round(pos[2] + offset)][Math.round(pos[0] + offset)] = this._pieces[z][y][x];
@@ -91,7 +93,7 @@ export class Cube {
 
     getPos(piece: mat4): vec3 {
         const origin = vec3.fromValues(0, 0, 0);
-        return vec3.transformMat4(vec3.create(), origin, piece);
+        return vec3.transformMat4(v3(), origin, piece);
     }
 
     getFace(direction: vec3 = vec3.fromValues(0, 1, 0)): mat4[][] {
@@ -99,10 +101,10 @@ export class Cube {
     }
 
     rotateLayer(direction: vec3, amount = 1, layer = 0): void {
-        let rotation = mat4.fromRotation(mat4.create(), -amount * Math.PI/2, direction);
-        let slice = this.getLayer(direction, layer);
-        slice.forEach((row: mat4[], y) => {
-            row.forEach((piece: mat4, x) => {
+        const rotation = mat4.fromRotation(m4(), -amount * Math.PI/2, direction);
+        const slice = this.getLayer(direction, layer);
+        slice.forEach((row: mat4[]) => {
+            row.forEach((piece: mat4) => {
                 mat4.multiply(piece, rotation, piece);
             });
         });
@@ -116,10 +118,10 @@ export class Cube {
         for (let i = movesArray.length-1; i >= 0; i--) {
             const move = movesArray[i];
             const mainMove = move[0];
-            let twoLayers = move.includes('w');
-            let inverted = move.includes("'");
-            let double = move.includes('2');
-            
+            const twoLayers = move.includes('w');
+            const inverted = move.includes("'");
+            const double = move.includes('2');
+
             invertedMoves += mainMove;
             invertedMoves += twoLayers ? 'w' : '';
             invertedMoves += inverted ? '' : "'";
@@ -140,16 +142,16 @@ export class Cube {
         movesArray.forEach(move => {
             if (!move) return;
             const mainMove = move[0];
-            let inverted = move.includes("'");
-            let double = move.includes('2');
-            let twoLayers = move.includes('w');
+            const inverted = move.includes("'");
+            const double = move.includes('2');
+            const twoLayers = move.includes('w');
 
             let amount = 1;
             if (inverted) amount *= -1;
             if (double) amount *= 2;
 
             // face rotations
-            let faceData = this._colorMap.find((e) => {return e.side == mainMove});
+            const faceData = this._colorMap.find((e) => {return e.side == mainMove});
             if (faceData) {
                 this.rotateLayer(faceData.direction, amount);
                 if (twoLayers) {
@@ -158,13 +160,13 @@ export class Cube {
             }
 
             // center rotations
-            let centerData = this._colorMap.find((e) => {return e.center == mainMove});
+            const centerData = this._colorMap.find((e) => {return e.center == mainMove});
             if (centerData) {
                 this.rotateLayer(centerData.direction, amount, Math.floor(size/2));
             }
 
             // cube rotations
-            let rotationData = this._colorMap.find((e) => {return e.rotation == mainMove});
+            const rotationData = this._colorMap.find((e) => {return e.rotation == mainMove});
             if (rotationData) {
                 for (let i = 0; i < size; i++) {
                     this.rotateLayer(rotationData.direction, amount, i);
@@ -196,7 +198,7 @@ export class Cube {
             x: (x + 1) / (this._size + 1),
             y: (y + 1) / (this._size + 1)
         };
-        let pos = this.getPos(this._pieces[y][this._size-1][x]);
+        const pos = this.getPos(this._pieces[y][this._size-1][x]);
         const end = {
             x: (pos[0] + offset + 1) / (this._size + 1),
             y: (pos[2] + offset + 1) / (this._size + 1)
@@ -241,14 +243,14 @@ export class Cube {
     }
 
     drawCube(anchor: HTMLDivElement, pll: boolean): void {
-        let size = this._size;
+        const size = this._size;
 
-        let topFace = this.getFace(vec3.fromValues(0,1,0));
+        const topFace = this.getFace(vec3.fromValues(0,1,0));
         if(pll){
             this.drawArrows(anchor, topFace);
         }
 
-        let gridTemplate = `0.5fr repeat(${size}, 1fr) 0.5fr`;
+        const gridTemplate = `0.5fr repeat(${size}, 1fr) 0.5fr`;
         anchor.style.gridTemplateColumns = gridTemplate;
         anchor.style.gridTemplateRows = gridTemplate;
 
@@ -258,24 +260,24 @@ export class Cube {
                 this.placeFace(anchor, x + 2, y + 2, color, pll);
             });
 
-            let firstPiece = row[0];
-            let firstColor = this.getColor(firstPiece, vec3.fromValues(-1, 0, 0));
+            const firstPiece = row[0];
+            const firstColor = this.getColor(firstPiece, vec3.fromValues(-1, 0, 0));
             this.placeFace(anchor, 1, y + 2, firstColor, pll);
 
-            let lastPiece = row[size-1];
-            let lastColor = this.getColor(lastPiece, vec3.fromValues(1, 0, 0));
+            const lastPiece = row[size-1];
+            const lastColor = this.getColor(lastPiece, vec3.fromValues(1, 0, 0));
             this.placeFace(anchor, size + 2, y + 2, lastColor, pll);
         });
 
         topFace[0].forEach((piece: mat4, x) => {
-            let firstPiece = topFace[0][x];
-            let firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, -1));
+            const firstPiece = topFace[0][x];
+            const firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, -1));
             this.placeFace(anchor, x + 2, 1, firstColor, pll);
         });
 
         topFace[size-1].forEach((piece: mat4, x) => {
-            let firstPiece = topFace[size-1][x];
-            let firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, 1));
+            const firstPiece = topFace[size-1][x];
+            const firstColor = this.getColor(firstPiece, vec3.fromValues(0, 0, 1));
             this.placeFace(anchor, x + 2, size + 2, firstColor, pll);
         });
     }
