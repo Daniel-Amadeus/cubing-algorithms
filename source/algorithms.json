@@ -204,7 +204,7 @@
                         },
                         {
                             "name": "E-Perm.",
-                            "algorithm": "x' R U' R' D R U R' Uw2 R' U R D R' U' R x'"
+                            "algorithm": "x' R U' R' D R U R' Uw2 R' U R D R' U' R x' y2"
                         }
                     ]
                 },
@@ -264,7 +264,7 @@
                     "algorithms": [
                         {
                             "name": "V-Perm.",
-                            "algorithm": "R' U R' U' y R' F' R2 U' R' U R' F R F"
+                            "algorithm": "R' U R' U' y R' F' R2 U' R' U R' F R F y'"
                         },
                         {
                             "name": "N-Perm.",
@@ -285,19 +285,19 @@
                     "algorithms": [
                         {
                             "name": "G-Perm.",
-                            "algorithm": "R2 Uw' R U' R U R' Uw R2 y R U' R'"
+                            "algorithm": "R2 Uw' R U' R U R' Uw R2 y R U' R' y'"
                         },
                         {
                             "name": "G-Perm.",
-                            "algorithm": "R2 Uw R' U R' U' R Uw' R2 y' R' U R"
+                            "algorithm": "R2 Uw R' U R' U' R Uw' R2 y' R' U R y"
                         },
                         {
                             "name": "G-Perm.",
-                            "algorithm": "R' U' R y R2 Uw R' U R U' R Uw' R2"
+                            "algorithm": "R' U' R y R2 Uw R' U R U' R Uw' R2 y'"
                         },
                         {
                             "name": "G-Perm.",
-                            "algorithm": "R U R' y' R2 Uw' R U' R' U R' Uw R2"
+                            "algorithm": "R U R' y' R2 Uw' R U' R' U R' Uw R2 y"
                         }
                     ]
                 }

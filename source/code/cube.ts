@@ -10,6 +10,9 @@ function eq(x: number, y: number): boolean {
     return Math.abs(x - y) < epsilon;
 }
 
+type Point = {x: number, y: number};
+type Line = {start: Point, end: Point};
+
 export class Cube {
 
     private _size = 3;
@@ -200,101 +203,7 @@ export class Cube {
                     this.rotateLayer(rotationData.direction, amount, i);
                 }
             }
-
-            // let direction = invertDirection(FACEROTATIONS.CW, inverted);
-            for(let i = 0; i < (double ? 2 : 1); i++){
-                const swap = this._swaps.get(mainMove);
-                if(!swap) {
-                    return;
-                }
-                let faces = swap.faces;
-                let stickers = swap.stickers;
-
-                if (inverted) {
-                    // console.log('inverted');
-                    faces = faces.reverse();
-                    stickers.map(e => {return e.reverse()});
-                }
-
-                stickers.forEach((swap) => {
-                    const buffer = this._faces[faces[3]][swap[3]];
-                    for (let index = faces.length - 2; index >= 0; index--) {
-                        const face0 = faces[index];
-                        const face1 = faces[index + 1];
-                        const sticker0 = swap[index];
-                        const sticker1 = swap[index + 1];
-                        this._faces[face1][sticker1] = this._faces[face0][sticker0];
-                    }
-                    this._faces[faces[0]][swap[0]] = buffer;
-                })
-                // switch (mainMove) {
-                //     case 'r': {
-                //         if(twoLayers) {
-                //         } else {
-                //             const swapFaces = [0, 2, 5, 4];
-                //             const sticker = [
-                //                 [2, 2, 2, 6],
-                //                 [5, 5, 5, 3],
-                //                 [8, 8, 8, 0]
-                //             ];
-
-                //             sticker.forEach((swap) => {
-                //                 const buffer = this._faces[swapFaces[0]][swap[0]];
-                //                 for (let index = 0; index < swapFaces.length - 1; index++) {
-                //                     const face0 = swapFaces[index];
-                //                     const face1 = swapFaces[(index + 1) % 4];
-                //                     const sticker0 = swap[index];
-                //                     const sticker1 = swap[(index + 1) % 4];
-                //                     this._faces[face0][sticker0] = this._faces[face1][sticker1];
-                //                 }
-                //                 this._faces[swapFaces[3]][swap[3]] = buffer;
-                //             })
-                //         }
-                //         break;
-                //     }
-                //     case 'l': {
-                //         if(twoLayers) {
-                //         } else {
-                //         }
-                //         break;
-                //     }
-                //     case 'u': {
-                //         if(twoLayers) {
-                //         } else {
-                //         }
-                //         break;
-                //     }
-                //     case 'd': {
-                //         if(twoLayers) {
-                //         } else {
-                //         }
-                //         break;
-                //     }
-                //     case 'f': {
-                //         if(twoLayers) {
-                //         } else {
-                //         }
-                //         break;
-                //     }
-                //     case 'b': {
-                //         if(twoLayers) {
-                //         } else {
-                //         }
-                //         break;
-                //     }
-                //     case 'm': {
-                //         break;
-                //     }
-                //     case 'x': {
-                //         break;
-                //     }
-                //     case 'y': {
-                //         break;
-                //     }
-                // }
-            }
         });
-        // console.log(this._faces);
     }
 
     placeFace(
@@ -317,9 +226,56 @@ export class Cube {
         vis.appendChild(sticker);
     }
 
-    drawArrows(vis: HTMLDivElement): void {
+    getMovement(face: mat4[][], x: number, y: number): Line {
+        let offset = (this._size - 1) / 2;
+        const start = {
+            x: (x + 1) / (this._size + 1),
+            y: (y + 1) / (this._size + 1)
+        };
+        let pos = this.getPos(this._pieces[y][this._size-1][x]);
+        const end = {
+            x: (pos[0] + offset + 1) / (this._size + 1),
+            y: (pos[2] + offset + 1) / (this._size + 1)
+        }
+        // console.log({x,y});
+        // console.log({start, end});
+        return {start, end};
+    }
+
+    shortenLine(line: Line, amount = 15): Line {
+        const diffX = (line.end.x - line.start.x) * (amount) / 100;
+        const diffY = (line.end.y - line.start.y) * (amount) / 100;
+        line.start.x += diffX;
+        line.start.y += diffY;
+        line.end.x -= diffX;
+        line.end.y -= diffY;
+        return line;
+    }
+
+    drawArrow(svg: SVGElement, face: mat4[][], x: number, y: number): void {
+        let movement = this.getMovement(face, x, y);
+        if(eq(movement.start.x, movement.end.x)
+            && eq(movement.start.y, movement.end.y)) {
+            return;
+        }
+        movement = this.shortenLine(movement);
+        const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'line') as SVGLineElement;
+        arrow.style.stroke = 'black';
+        arrow.setAttribute('x1', (movement.start.x * 100).toString());
+        arrow.setAttribute('y1', (movement.start.y * 100).toString());
+        arrow.setAttribute('x2', (movement.end.x * 100).toString());
+        arrow.setAttribute('y2', (movement.end.y * 100).toString());
+        arrow.setAttribute('marker-start', 'url(#arrow)');
+        svg.appendChild(arrow);
+    }
+
+    drawArrows(vis: HTMLDivElement, face: mat4[][]): void {
         const svg = vis.getElementsByClassName('cubeAnnotation')[0] as SVGElement;
-        // drawArrow(svg, cube, [FACES.TOP, FACES.BACK, FACES.RIGHT]);
+        for (let y = 0; y < this._size; y++) {
+            for (let x = 0; x < this._size; x++) {
+                this.drawArrow(svg, face, x, y);
+            }
+        }
         // drawArrow(svg, cube, [FACES.TOP, FACES.BACK, FACES.LEFT]);
         // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.RIGHT]);
         // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.LEFT]);
@@ -333,15 +289,15 @@ export class Cube {
         let size = this._size;
         let offset = (size - 1) / 2;
 
+        let topFace = this.getFace(vec3.fromValues(0,1,0));
         if(pll){
-            this.drawArrows(anchor);
+            this.drawArrows(anchor, topFace);
         }
 
         let gridTemplate = `0.5fr repeat(${size}, 1fr) 0.5fr`;
         anchor.style.gridTemplateColumns = gridTemplate;
         anchor.style.gridTemplateRows = gridTemplate;
 
-        let topFace = this.getFace(vec3.fromValues(0,1,0));
         // console.log('faces');
         topFace.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
