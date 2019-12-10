@@ -26,12 +26,12 @@ export class Cube {
     ];
 
     private _colorMap = [
-        {direction: vec3.fromValues( 0, 1, 0), color: 'yellow', side: 'u', center: ''},
-        {direction: vec3.fromValues( 0,-1, 0), color: 'white', side: 'd', center: 'e'},
-        {direction: vec3.fromValues( 1, 0, 0), color: 'orange', side: 'r', center: ''},
-        {direction: vec3.fromValues(-1, 0, 0), color: 'red', side: 'l', center: 'm'},
-        {direction: vec3.fromValues( 0, 0,-1), color: 'blue', side: 'b', center: ''},
-        {direction: vec3.fromValues( 0, 0, 1), color: 'green', side: 'f', center: 's'},
+        {direction: vec3.fromValues( 0, 1, 0), side: 'u', center: ' ', rotation: 'y', color: 'yellow'},
+        {direction: vec3.fromValues( 0,-1, 0), side: 'd', center: 'e', rotation: ' ', color: 'white'},
+        {direction: vec3.fromValues( 1, 0, 0), side: 'r', center: ' ', rotation: 'x', color: 'orange'},
+        {direction: vec3.fromValues(-1, 0, 0), side: 'l', center: 'm', rotation: ' ', color: 'red'},
+        {direction: vec3.fromValues( 0, 0,-1), side: 'b', center: ' ', rotation: ' ', color: 'blue'},
+        {direction: vec3.fromValues( 0, 0, 1), side: 'f', center: 's', rotation: 'z', color: 'green'},
     ]
 
     private _swaps = new Map<string, Swap>();
@@ -182,12 +182,23 @@ export class Cube {
             let faceData = this._colorMap.find((e) => {return e.side == mainMove});
             if (faceData) {
                 this.rotateLayer(faceData.direction, amount);
+                if (twoLayers) {
+                    this.rotateLayer(faceData.direction, amount, 1);
+                }
             }
 
             // center rotations
             let centerData = this._colorMap.find((e) => {return e.center == mainMove});
             if (centerData) {
                 this.rotateLayer(centerData.direction, amount, Math.floor(size/2));
+            }
+
+            // cube rotations
+            let rotationData = this._colorMap.find((e) => {return e.rotation == mainMove});
+            if (rotationData) {
+                for (let i = 0; i < size; i++) {
+                    this.rotateLayer(rotationData.direction, amount, i);
+                }
             }
 
             // let direction = invertDirection(FACEROTATIONS.CW, inverted);
