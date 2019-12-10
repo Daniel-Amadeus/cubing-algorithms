@@ -26,12 +26,12 @@ export class Cube {
     ];
 
     private _colorMap = [
-        {direction: vec3.fromValues( 0, 1, 0), color: 'yellow', side: 'u'},
-        {direction: vec3.fromValues( 0,-1, 0), color: 'white', side: 'd'},
-        {direction: vec3.fromValues( 1, 0, 0), color: 'orange', side: 'r'},
-        {direction: vec3.fromValues(-1, 0, 0), color: 'red', side: 'l'},
-        {direction: vec3.fromValues( 0, 0,-1), color: 'blue', side: 'b'},
-        {direction: vec3.fromValues( 0, 0, 1), color: 'green', side: 'f'},
+        {direction: vec3.fromValues( 0, 1, 0), color: 'yellow', side: 'u', center: ''},
+        {direction: vec3.fromValues( 0,-1, 0), color: 'white', side: 'd', center: 'e'},
+        {direction: vec3.fromValues( 1, 0, 0), color: 'orange', side: 'r', center: ''},
+        {direction: vec3.fromValues(-1, 0, 0), color: 'red', side: 'l', center: 'm'},
+        {direction: vec3.fromValues( 0, 0,-1), color: 'blue', side: 'b', center: ''},
+        {direction: vec3.fromValues( 0, 0, 1), color: 'green', side: 'f', center: 's'},
     ]
 
     private _swaps = new Map<string, Swap>();
@@ -63,6 +63,7 @@ export class Cube {
         // this.rotateLayer(vec3.fromValues(1, 0, 0));
         // this.rotateLayer(vec3.fromValues(0, 1, 0));
         // this.rotateLayer(vec3.fromValues(0, 0, 1));
+        // this.rotateLayer(vec3.fromValues(-1, 0, 0), 1, 1);
         // console.log(this._pieces);
         // this.getLayer();
 
@@ -148,10 +149,10 @@ export class Cube {
         return this.getLayer(direction);
     }
 
-    rotateLayer(direction: vec3, amount = 1): void {
+    rotateLayer(direction: vec3, amount = 1, layer = 0): void {
         let rotation = mat4.fromRotation(mat4.create(), -amount * Math.PI/2, direction);
-        let layer = this.getLayer(direction, 0);
-        layer.forEach((row: mat4[], y) => {
+        let slice = this.getLayer(direction, layer);
+        slice.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
                 mat4.multiply(piece, rotation, piece);
             });
@@ -160,6 +161,7 @@ export class Cube {
 
     applyMoves(moves: string): void {
         console.log(moves);
+        const size = this._size;
         moves = moves.toLowerCase();
         moves = moves.replace(/[()]/g, '');
         const movesArray = moves.split(' ');
@@ -176,9 +178,16 @@ export class Cube {
 
             // console.log(move);
 
-            let sideData = this._colorMap.find((e) => {return e.side == mainMove});
-            if (sideData) {
-                this.rotateLayer(sideData.direction, amount);
+            // face rotations
+            let faceData = this._colorMap.find((e) => {return e.side == mainMove});
+            if (faceData) {
+                this.rotateLayer(faceData.direction, amount);
+            }
+
+            // center rotations
+            let centerData = this._colorMap.find((e) => {return e.center == mainMove});
+            if (centerData) {
+                this.rotateLayer(centerData.direction, amount, Math.floor(size/2));
             }
 
             // let direction = invertDirection(FACEROTATIONS.CW, inverted);
