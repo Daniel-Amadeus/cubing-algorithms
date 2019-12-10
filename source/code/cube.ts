@@ -61,6 +61,7 @@ export class Cube {
         }
 
         this.rotateLayer(vec3.fromValues(1, 0, 0));
+        this.rotateLayer(vec3.fromValues(0, 0, 1));
         console.log(this._pieces);
         // this.getLayer();
 
@@ -124,10 +125,11 @@ export class Cube {
                     piece = mat4.multiply(mat4.create(), rot, piece);
                     let pos = vec3.transformMat4(vec3.create(), origin, piece);
                     // console.log({oldPie: this._pieces[z][y][x], piece});
+                    if (eq(pos[1] + offset, size - layer - 1)) {
+                        console.log({x: pos[0] + offset, y: pos[2] + offset});
                         console.log((this._pieces[z][y][x] as any).index);
                         console.log(pos);
-                    if (eq(pos[1] + offset, size - layer - 1)) {
-                        face[Math.round(pos[0] + offset)][Math.round(pos[2] + offset)] = this._pieces[z][y][x];
+                        face[Math.round(pos[2] + offset)][Math.round(pos[0] + offset)] = this._pieces[z][y][x];
                     }
                 }
             }
@@ -304,13 +306,17 @@ export class Cube {
         anchor.style.gridTemplateRows = gridTemplate;
 
         let topFace = this.getFace(vec3.fromValues(0,1,0));
+        console.log('faces');
         topFace.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
+                console.log({x,y});
+                console.log((piece as any).index);
                 const color = this.getColor(piece);
                 const pos = this.getPos(piece);
-                const xIndex = pos[0] + offset;
-                const yIndex = pos[2] + offset;
-                this.placeFace(anchor, xIndex + 2, yIndex + 2, color, pll);
+                console.log(pos);
+                // const xIndex = pos[0] + offset;
+                // const yIndex = pos[2] + offset;
+                this.placeFace(anchor, x + 2, y + 2, color, pll);
             });
 
             let firstPiece = row[0];
