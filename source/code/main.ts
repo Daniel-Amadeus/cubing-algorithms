@@ -1,35 +1,7 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-const CubeModel = require('node-cube-model');
-const constants = CubeModel.constants;
-const FACES = constants.FACES;
-const FACEROTATIONS = constants.FACEROTATIONS;
-const CUBEROTATIONS = constants.CUBEROTATIONS;
 const data = require('../algorithms.json');
 const {Cube} = require('./cube');
-
-type Point = {x: number, y: number};
-type Line = {start: Point, end: Point};
-
-const colors = [
-    'yellow',
-    'blue',
-    'red',
-    'green',
-    'orange',
-    'white'
-];
-
-let faces = [
-    [0,0,0,0,0,0,0,0,0],
-    [1,1,1,1,1,1,1,1,1],
-    [2,2,2,2,2,2,2,2,2],
-    [3,3,3,3,3,3,3,3,3],
-    [4,4,4,4,4,4,4,4,4],
-    [5,5,5,5,5,5,5,5,5]
-];
-
-const orignCube = CubeModel.create(faces);
 
 function invertMoves (moves: String): String{
     moves = moves.toLowerCase();
