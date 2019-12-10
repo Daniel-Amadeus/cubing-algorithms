@@ -1,6 +1,5 @@
 import { mat4, vec3, vec4, quat } from 'gl-matrix';
 
-
 let epsilon = 0.01;
 function eq(x: number, y: number): boolean {
     return Math.abs(x - y) < epsilon;
@@ -12,17 +11,7 @@ type Line = {start: Point, end: Point};
 export class Cube {
 
     private _size = 3;
-    private _faces = Array(6).fill(0).map((e, i) => {return Array(9).fill(i)});
     private _pieces: mat4[][][] = [];
-
-    private _colors = [
-        'yellow',
-        'blue',
-        'red',
-        'green',
-        'orange',
-        'white'
-    ];
 
     private _colorMap = [
         {direction: vec3.fromValues( 0, 1, 0), side: 'u', center: ' ', rotation: 'y', color: 'yellow'},
@@ -116,8 +105,32 @@ export class Cube {
         });
     }
 
-    applyMoves(moves: string): void {
+    invertMoves (moves: string): string{
+        moves = moves.toLowerCase();
+        moves = moves.replace(/[()]/g, '');
+        const movesArray = moves.split(' ');
+        let invertedMoves = '';
+        for (let i = movesArray.length-1; i >= 0; i--) {
+            const move = movesArray[i];
+            const mainMove = move[0];
+            let twoLayers = move.includes('w');
+            let inverted = move.includes("'");
+            let double = move.includes('2');
+            
+            invertedMoves += mainMove;
+            invertedMoves += twoLayers ? 'w' : '';
+            invertedMoves += inverted ? '' : "'";
+            invertedMoves += double ? '2' : '';
+            invertedMoves += ' ';
+        }
+        return invertedMoves;
+    }
+
+    applyMoves(moves: string, invertMoves = false): void {
         const size = this._size;
+        if (invertMoves) {
+            moves = this.invertMoves(moves);
+        }
         moves = moves.toLowerCase();
         moves = moves.replace(/[()]/g, '');
         const movesArray = moves.split(' ');
