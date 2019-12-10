@@ -1,10 +1,6 @@
 import { mat4, vec3, vec4, quat } from 'gl-matrix';
 
 
-type Swap = {faces: number[], stickers: number[][]};
-
-
-
 let epsilon = 0.01;
 function eq(x: number, y: number): boolean {
     return Math.abs(x - y) < epsilon;
@@ -36,9 +32,6 @@ export class Cube {
         {direction: vec3.fromValues( 0, 0,-1), side: 'b', center: ' ', rotation: ' ', color: 'blue'},
         {direction: vec3.fromValues( 0, 0, 1), side: 'f', center: 's', rotation: 'z', color: 'green'},
     ]
-
-    private _swaps = new Map<string, Swap>();
-    private _circleSwap = [[0, 2, 6, 8], [1, 3, 5, 7]];
     
     constructor(size = 3) {
         this._size = size;
@@ -62,38 +55,6 @@ export class Cube {
             }
             this._pieces.push(slice);
         }
-
-        // this.rotateLayer(vec3.fromValues(1, 0, 0));
-        // this.rotateLayer(vec3.fromValues(0, 1, 0));
-        // this.rotateLayer(vec3.fromValues(0, 0, 1));
-        // this.rotateLayer(vec3.fromValues(-1, 0, 0), 1, 1);
-        // console.log(this._pieces);
-        // this.getLayer();
-
-        this._swaps.set('r', {
-            faces: [0, 4, 5, 2],
-            stickers: [[2, 6, 2, 2], [5, 3, 5, 5], [8, 0, 8, 8]]
-        });
-        this._swaps.set('l', {
-            faces: [0, 2, 5, 4],
-            stickers: [[0, 0, 0, 8], [3, 3, 3, 5], [6, 6, 6, 2]]
-        });
-        this._swaps.set('f', {
-            faces: [0, 3, 5, 1],
-            stickers: [[6, 0, 2, 8], [7, 5, 1, 5], [8, 6, 0, 2]]
-        });
-        this._swaps.set('b', {
-            faces: [0, 1, 5, 3],
-            stickers: [[0, 6, 8, 2], [1, 3, 7, 5], [2, 0, 6, 8]]
-        });
-        this._swaps.set('u', {
-            faces: [4, 3, 2, 1],
-            stickers: [[0, 0, 0, 0], [1, 1, 1, 1], [2, 2, 2, 2]]
-        });
-        this._swaps.set('d', {
-            faces: [1, 2, 3, 4],
-            stickers: [[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]]
-        });
     }
 
     getColor(piece: mat4, face: vec3 = vec3.fromValues(0, 1, 0)): string {
@@ -111,7 +72,6 @@ export class Cube {
     }
 
     getLayer(direction: vec3 = vec3.fromValues(0, 1, 0), layer: number = 0): mat4[][] {
-        // console.log('getLayer');
         const size = this._size;
         if (layer >= size ) {
             console.warn(`Can not rotate layer ${layer} of a cube-${size}.`);
@@ -120,7 +80,6 @@ export class Cube {
         const origin = vec3.fromValues(0, 0, 0);
         const rotateUp = quat.rotationTo(quat.create(), direction, [0, 1, 0]);
         const rot = mat4.fromQuat(mat4.create(), rotateUp);
-        // console.log(rot);
         const offset = (size - 1) / 2;
         const face: mat4[][] = Array(size).fill(0).map((e) => {return Array(size)});
         for(let z = 0; z < this._size; z++) {
@@ -129,11 +88,7 @@ export class Cube {
                     let piece = this._pieces[z][y][x];
                     piece = mat4.multiply(mat4.create(), rot, piece);
                     let pos = vec3.transformMat4(vec3.create(), origin, piece);
-                    // console.log({oldPie: this._pieces[z][y][x], piece});
                     if (eq(pos[1] + offset, size - layer - 1)) {
-                        // console.log({x: Math.round(pos[0] + offset), y: Math.round(pos[2] + offset)});
-                        // console.log((this._pieces[z][y][x] as any).index);
-                        // console.log(pos);
                         face[Math.round(pos[2] + offset)][Math.round(pos[0] + offset)] = this._pieces[z][y][x];
                     }
                 }
@@ -148,7 +103,6 @@ export class Cube {
     }
 
     getFace(direction: vec3 = vec3.fromValues(0, 1, 0)): mat4[][] {
-        // console.log('get face');
         return this.getLayer(direction);
     }
 
@@ -163,7 +117,6 @@ export class Cube {
     }
 
     applyMoves(moves: string): void {
-        console.log(moves);
         const size = this._size;
         moves = moves.toLowerCase();
         moves = moves.replace(/[()]/g, '');
@@ -178,8 +131,6 @@ export class Cube {
             let amount = 1;
             if (inverted) amount *= -1;
             if (double) amount *= 2;
-
-            // console.log(move);
 
             // face rotations
             let faceData = this._colorMap.find((e) => {return e.side == mainMove});
@@ -211,8 +162,7 @@ export class Cube {
             x: number,
             y: number,
             color: string,
-            pll: boolean,
-            piece: any = undefined) {
+            pll: boolean) {
         const sticker = document.createElement('div');
         sticker.className = 'cubeFace';
         sticker.classList.add(color);
@@ -221,8 +171,6 @@ export class Cube {
         }
         sticker.style.gridColumnStart = x.toString();
         sticker.style.gridRowStart = y.toString();
-        if (piece)
-            sticker.innerText = JSON.stringify(piece.index).replace(/[,]/g, '\n').replace(/[{}"]/g, '');
         vis.appendChild(sticker);
     }
 
@@ -237,8 +185,6 @@ export class Cube {
             x: (pos[0] + offset + 1) / (this._size + 1),
             y: (pos[2] + offset + 1) / (this._size + 1)
         }
-        // console.log({x,y});
-        // console.log({start, end});
         return {start, end};
     }
 
@@ -276,18 +222,10 @@ export class Cube {
                 this.drawArrow(svg, face, x, y);
             }
         }
-        // drawArrow(svg, cube, [FACES.TOP, FACES.BACK, FACES.LEFT]);
-        // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.RIGHT]);
-        // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT, FACES.LEFT]);
-        // drawArrow(svg, cube, [FACES.TOP, FACES.RIGHT]);
-        // drawArrow(svg, cube, [FACES.TOP, FACES.LEFT]);
-        // drawArrow(svg, cube, [FACES.TOP, FACES.BACK]);
-        // drawArrow(svg, cube, [FACES.TOP, FACES.FRONT]);
     }
 
     drawCube(anchor: HTMLDivElement, pll: boolean): void {
         let size = this._size;
-        let offset = (size - 1) / 2;
 
         let topFace = this.getFace(vec3.fromValues(0,1,0));
         if(pll){
@@ -298,16 +236,9 @@ export class Cube {
         anchor.style.gridTemplateColumns = gridTemplate;
         anchor.style.gridTemplateRows = gridTemplate;
 
-        // console.log('faces');
         topFace.forEach((row: mat4[], y) => {
             row.forEach((piece: mat4, x) => {
-                // console.log({x,y});
-                // console.log((piece as any).index);
                 const color = this.getColor(piece);
-                const pos = this.getPos(piece);
-                // console.log(pos);
-                // const xIndex = pos[0] + offset;
-                // const yIndex = pos[2] + offset;
                 this.placeFace(anchor, x + 2, y + 2, color, pll);
             });
 
