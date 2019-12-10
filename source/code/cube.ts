@@ -37,7 +37,7 @@ export class Cube {
     private _swaps = new Map<string, Swap>();
     private _circleSwap = [[0, 2, 6, 8], [1, 3, 5, 7]];
     
-    constructor(size = 2) {
+    constructor(size = 3) {
         this._size = size;
         let offset = (size - 1) / 2;
         for(let z = 0; z < size; z++) {
@@ -61,6 +61,7 @@ export class Cube {
         }
 
         this.rotateLayer(vec3.fromValues(1, 0, 0));
+        this.rotateLayer(vec3.fromValues(0, 1, 0));
         this.rotateLayer(vec3.fromValues(0, 0, 1));
         console.log(this._pieces);
         // this.getLayer();
@@ -92,10 +93,10 @@ export class Cube {
     }
 
     getColor(piece: mat4, face: vec3 = vec3.fromValues(0, 1, 0)): string {
-        let origin = vec3.fromValues(0, 0, 0);
-        let pos = vec3.transformMat4(vec3.create(), origin, piece);
+        let pos = this.getPos(piece);
         let translation = mat4.fromTranslation(mat4.create(), [-pos[0], -pos[1], -pos[2]]);
         let rotation = mat4.multiply(mat4.create(), piece, translation);
+        mat4.invert(rotation, rotation);
         let up = vec4.fromValues(face[0], face[1], face[2], 0);
         let direction = vec4.transformMat4(vec4.create(), up, rotation);
         let color = this._colorMap.find((element: any) => {
@@ -126,7 +127,7 @@ export class Cube {
                     let pos = vec3.transformMat4(vec3.create(), origin, piece);
                     // console.log({oldPie: this._pieces[z][y][x], piece});
                     if (eq(pos[1] + offset, size - layer - 1)) {
-                        console.log({x: pos[0] + offset, y: pos[2] + offset});
+                        console.log({x: Math.round(pos[0] + offset), y: Math.round(pos[2] + offset)});
                         console.log((this._pieces[z][y][x] as any).index);
                         console.log(pos);
                         face[Math.round(pos[2] + offset)][Math.round(pos[0] + offset)] = this._pieces[z][y][x];
@@ -269,7 +270,8 @@ export class Cube {
             x: number,
             y: number,
             color: string,
-            pll: boolean) {
+            pll: boolean,
+            piece: any = undefined) {
         const sticker = document.createElement('div');
         sticker.className = 'cubeFace';
         sticker.classList.add(color);
@@ -278,6 +280,8 @@ export class Cube {
         }
         sticker.style.gridColumnStart = x.toString();
         sticker.style.gridRowStart = y.toString();
+        if (piece)
+            sticker.innerText = JSON.stringify(piece.index).replace(/[,]/g, '\n').replace(/[{}"]/g, '');
         vis.appendChild(sticker);
     }
 
@@ -316,7 +320,7 @@ export class Cube {
                 console.log(pos);
                 // const xIndex = pos[0] + offset;
                 // const yIndex = pos[2] + offset;
-                this.placeFace(anchor, x + 2, y + 2, color, pll);
+                this.placeFace(anchor, x + 2, y + 2, color, pll, piece);
             });
 
             let firstPiece = row[0];
