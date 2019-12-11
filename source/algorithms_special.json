@@ -1,0 +1,12 @@
+[
+    {
+        "cube_size": 4,
+        "algorithm": "(M' U M) U2 (M' U M)"
+    },
+    {
+        "algorithm": "(R U R' U') (M' U R U') Rw'"
+    },
+    {
+        "algorithm": "(M' U' M' U' M' U' M' U) (M' U' M' U' M' U' M' U)"
+    }
+]

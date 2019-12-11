@@ -32,7 +32,8 @@ module.exports = {
                 loader: 'pug-html-loader',
                 options: {
                     data: {
-                        data: require('./source/algorithms.json')
+                        data: require('./source/algorithms.json'),
+                        specials: require('./source/algorithms_special.json'),
                     }
                 }
             }
@@ -65,6 +66,11 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: 'speed_cubing.html',
             template: 'source/pages/speed_cubing.pug',
+            inject: false
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'more.html',
+            template: 'source/pages/more.pug',
             inject: false
         }),
         new CopyWebpackPlugin([
