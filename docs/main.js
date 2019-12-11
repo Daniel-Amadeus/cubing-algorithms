@@ -32117,10 +32117,10 @@ module.exports = JSON.parse("{\"steps\":[{\"name\":\"Orientation of the last lay
 /*!****************************************!*\
   !*** ./source/algorithms_special.json ***!
   \****************************************/
-/*! exports provided: 0, 1, default */
+/*! exports provided: 0, 1, 2, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"cube_size\":4,\"algorithm\":\"r2 B2 U2 l U2 r' U2 r U2 F2 r F2 l' B2 r2\"},{\"cube_size\":4,\"pll\":true,\"algorithm\":\"r2 U2 r2 Uw2 r2 u2\"}]");
+module.exports = JSON.parse("[{\"cube_size\":4,\"algorithm\":\"Rw U2 x Rw U2 Rw U2 Rw' U2 Lw U2 Rw' U2 Rw U2 Rw' U2 Rw'\"},{\"cube_size\":5,\"algorithm\":\"Rw U2 x Rw U2 Rw U2 Rw' M U2 Lw U2 Rw' U2 Rw U2 Rw' U2 Rw'\"},{\"cube_size\":4,\"pll\":true,\"algorithm\":\"r2 U2 r2 Uw2 r2 u2\"}]");
 
 /***/ }),
 

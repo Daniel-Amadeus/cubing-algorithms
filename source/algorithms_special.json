@@ -1,7 +1,11 @@
 [
     {
         "cube_size": 4,
-        "algorithm": "r2 B2 U2 l U2 r' U2 r U2 F2 r F2 l' B2 r2"
+        "algorithm": "Rw U2 x Rw U2 Rw U2 Rw' U2 Lw U2 Rw' U2 Rw U2 Rw' U2 Rw'"
+    },
+    {
+        "cube_size": 5,
+        "algorithm": "Rw U2 x Rw U2 Rw U2 Rw' M U2 Lw U2 Rw' U2 Rw U2 Rw' U2 Rw'"
     },
     {
         "cube_size": 4,

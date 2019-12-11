@@ -3,7 +3,7 @@ html
 body.bg-light
     include partials/navbar.pug
     #specials.content.container
-        p This page shows special algorithms I use to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation].
+        p This page shows special algorithms I use to solve twisty puzzles. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation]. Helpful videos: #[a(href='https://youtu.be/KWOZHbDdOeo') Solve a 4x4 by J Perm], #[a(href='https://youtu.be/d1I-jJlVwB4') Solve a 5x5].
         .row
             each special, specialIndex in specials
                 -let id = `${specialIndex}`
