@@ -183,6 +183,75 @@
                             "algorithm": "Rw' R2 U R' U R U2 R' U M'"
                         }
                     ]
+                },
+                {
+                    "name": "fish pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "F (R U') (R' U' R U) (R' F')"
+                        },
+                        {
+                            "algorithm": "R U2 R2 F R F' R U2 R'"
+                        },
+                        {
+                            "algorithm": "R U R' U R' F R F' R U2 R'"
+                        },
+                        {
+                            "algorithm": "R U R' U' R' F R2 U R' U' F'"
+                        }
+                    ]
+                },
+                {
+                    "name": "I pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "Fw (R U R' U') (R U R' U') Fw'"
+                        },
+                        {
+                            "algorithm": "(R U R' U R Dw') (R U' R' F')"
+                        },
+                        {
+                            "algorithm": "F (R U R' U' R) y' (R' F) (R B') (R' F')"
+                        },
+                        {
+                            "algorithm": "(R U R' U R Dw') (R U' R' F') y"
+                        }
+                    ]
+                },
+                {
+                    "name": "kick pattern",
+                    "algorithms": [],
+                    "algorithms_": [
+                        {
+                            "algorithm": "x' (R U' R' F') (R U R') xy (R' U R)"
+                        },
+                        {
+                            "algorithm": "(Rw U Rw') (R U R' U') (Rw U' Rw')"
+                        },
+                        {
+                            "algorithm": "x' (L' U L F) (L' U' L) xy' (L U' L') x2"
+                        },
+                        {
+                            "algorithm": "(Lw' U' Lw) (L' U' L U) (Lw' U Lw)"
+                        }
+                    ]
+                },
+                {
+                    "name": "unfavourable pattern",
+                    "algorithms": [
+                        {
+                            "algorithm": "(R U') (R' U2) (R U) y (R U') (R' U' F')"
+                        },
+                        {
+                            "algorithm": "(R'2 U R' B') (R U') (R'2 U) (Lw U Lw')"
+                        },
+                        {
+                            "algorithm": "(L' U) (L U'2) (L' U') y' (L' U) (L U F)"
+                        },
+                        {
+                            "algorithm": "(L2 U' L B) (L' U) (L2 U') (Rw' U' Rw)"
+                        }
+                    ]
                 }
             ]
         },
