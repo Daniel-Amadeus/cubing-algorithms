@@ -111,13 +111,13 @@ export class Cube {
     }
 
     tokenizeMoves (moves: string): string[] {
-        moves = moves.toLowerCase();
+        moves = moves;
         moves = moves.replace(/[() ]/g, '');
         const mainMoves = 'rludfbmesxyz';
         const movesArray: string[] = [];
         let move = '';
         for (let i = 0; i < moves.length; i++) {
-            if (mainMoves.includes(moves[i])) {
+            if (mainMoves.includes(moves[i].toLowerCase())) {
                 movesArray.push(move);
                 move = moves[i];
                 continue;
@@ -154,12 +154,12 @@ export class Cube {
             moves = this.invertMoves(moves);
         }
         // console.log(moves);
-        moves = moves.toLowerCase();
-        moves = moves.replace(/[()]/g, '');
-        const movesArray = moves.split(' ');
+        const movesArray = this.tokenizeMoves(moves);
         movesArray.forEach(move => {
             if (!move) return;
-            const mainMove = move[0];
+            let mainMove = move[0];
+            const innerLayer = mainMove == mainMove.toLowerCase();
+            mainMove = mainMove.toLocaleLowerCase();
             const inverted = move.includes("'");
             const double = move.includes('2');
             const twoLayers = move.includes('w');
@@ -171,9 +171,10 @@ export class Cube {
             // face rotations
             const faceData = this._colorMap.find((e) => {return e.side == mainMove});
             if (faceData) {
-                this.rotateLayer(faceData.direction, amount);
+                const layer = innerLayer ? 1 : 0;
+                this.rotateLayer(faceData.direction, amount, layer);
                 if (twoLayers) {
-                    this.rotateLayer(faceData.direction, amount, 1);
+                    this.rotateLayer(faceData.direction, amount, layer + 1);
                 }
             }
 
