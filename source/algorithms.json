@@ -220,8 +220,7 @@
                 },
                 {
                     "name": "kick pattern",
-                    "algorithms": [],
-                    "algorithms_": [
+                    "algorithms": [
                         {
                             "algorithm": "x' (R U' R' F') (R U R') xy (R' U R)"
                         },
@@ -229,7 +228,7 @@
                             "algorithm": "(Rw U Rw') (R U R' U') (Rw U' Rw')"
                         },
                         {
-                            "algorithm": "x' (L' U L F) (L' U' L) xy' (L U' L') x2"
+                            "algorithm": "x' (L' U L F) (L' U' L) xy' (L U' L')"
                         },
                         {
                             "algorithm": "(Lw' U' Lw) (L' U' L U) (Lw' U Lw)"

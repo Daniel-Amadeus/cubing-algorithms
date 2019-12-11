@@ -110,10 +110,27 @@ export class Cube {
         });
     }
 
-    invertMoves (moves: string): string{
+    tokenizeMoves (moves: string): string[] {
         moves = moves.toLowerCase();
-        moves = moves.replace(/[()]/g, '');
-        const movesArray = moves.split(' ');
+        moves = moves.replace(/[() ]/g, '');
+        const mainMoves = 'rludfbmesxyz';
+        const movesArray: string[] = [];
+        let move = '';
+        for (let i = 0; i < moves.length; i++) {
+            if (mainMoves.includes(moves[i])) {
+                movesArray.push(move);
+                move = moves[i];
+                continue;
+            }
+            move += moves[i];
+        }
+        movesArray.push(move);
+        movesArray.shift();
+        return movesArray;
+    }
+
+    invertMoves (moves: string): string{
+        const movesArray = this.tokenizeMoves(moves);
         let invertedMoves = '';
         for (let i = movesArray.length-1; i >= 0; i--) {
             const move = movesArray[i];
@@ -136,6 +153,7 @@ export class Cube {
         if (invertMoves) {
             moves = this.invertMoves(moves);
         }
+        // console.log(moves);
         moves = moves.toLowerCase();
         moves = moves.replace(/[()]/g, '');
         const movesArray = moves.split(' ');
