@@ -214,7 +214,7 @@
                             "algorithm": "F (R U R' U' R) y' (R' F) (R B') (R' F')"
                         },
                         {
-                            "algorithm": "(R U R' U R Dw') (R U' R' F') y"
+                            "algorithm": "(R' U2) (R'2 U) (R' U) (R U'2) x' (U' R' U) x"
                         }
                     ]
                 },
