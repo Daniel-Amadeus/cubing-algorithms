@@ -49,6 +49,7 @@ module.exports = {
         libraryTarget: 'umd'
     },
     devServer: {
+        open: true,
         contentBase: path.resolve(__dirname, "./source"),
         watchContentBase: true
     },
