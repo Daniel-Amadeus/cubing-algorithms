@@ -45,6 +45,12 @@ export class Cube {
 
     constructor(size = 3) {
         this._size = size;
+        this.initPieces();
+    }
+
+    initPieces(): void {
+        this._pieces = [];
+        const size = this._size;
         const offset = this.offset();
         for (let z = 0; z < size; z++) {
             const slice: mat4[][] = [];
@@ -346,5 +352,24 @@ export class Cube {
             );
             this.placeFace(anchor, x + 2, size + 2, firstColor, pll);
         });
+    }
+
+    reset(anchor: HTMLDivElement): void {
+        this.initPieces();
+        const className = 'cubeAnnotation';
+        const svg = anchor.getElementsByClassName(className)[0] as SVGElement;
+        for (const child of Array.from(svg.children)) {
+            if (child.tagName != 'line') {
+                continue;
+            }
+            svg.removeChild(child);
+        }
+        for (const child of Array.from(anchor.children)) {
+            if (child.tagName != 'DIV') {
+                continue;
+            }
+            anchor.removeChild(child);
+        }
+
     }
 }
