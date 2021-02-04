@@ -12,6 +12,21 @@ window.onload = function () {
     if (document.getElementById('specials')) {
         drawSpecials();
     }
+
+    if (document.getElementById('practice')) {
+        console.log('practice');
+        const id = 'cube';
+        const vis = document.getElementById(id) as HTMLDivElement;
+        console.log(vis);
+
+        if (!vis) {
+            return;
+        }
+
+        let cube = new Cube();
+        // cube.applyMoves(algorithm.algorithm, true);
+        cube.drawCube(vis);
+    }
 }
 
 const drawAlgorithms = () => {

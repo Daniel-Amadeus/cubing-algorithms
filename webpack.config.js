@@ -74,6 +74,11 @@ module.exports = {
             template: 'source/pages/more.pug',
             inject: false
         }),
+        new HtmlWebpackPlugin({
+            filename: 'practice.html',
+            template: 'source/pages/practice.pug',
+            inject: false
+        }),
         new CopyWebpackPlugin([
             { from: 'source/css', to: 'css' }
         ]),
