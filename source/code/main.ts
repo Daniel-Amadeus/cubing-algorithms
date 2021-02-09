@@ -53,13 +53,17 @@ const drawSpecials = () => {
 }
 
 const preparePracticeArea = () => {
-    const id = 'cube';
-    const vis = document.getElementById(id) as HTMLDivElement;
-    const algorithmLabel = document.getElementById('algorithmLabel');
+    const algorithmVisualization =
+        document.getElementById('cube') as HTMLDivElement;
+    const resultVisualization =
+        document.getElementById('resultCube') as HTMLDivElement;
 
-    if (!vis) {
+    if (!algorithmVisualization || !resultVisualization) {
         return;
     }
+
+    const algorithmLabel = document.getElementById('algorithmLabel');
+    const practiceResult = document.getElementById('practiceResult');
 
     const steps = data.steps.map((step: any) => {
         const algorithms = step.algorithmGroups.map((algorithmGroup: any) => {
@@ -79,8 +83,11 @@ const preparePracticeArea = () => {
         .flat();
 
 
-    let cube = new Cube();
-    cube.drawCube(vis, true);
+    let algorithmCube = new Cube();
+    algorithmCube.drawCube(algorithmVisualization, true);
+
+    let resultCube = new Cube();
+    resultCube.drawCube(resultVisualization, true);
 
     const controls =
         document.getElementById('practiceControls') as HTMLDivElement;
@@ -93,9 +100,13 @@ const preparePracticeArea = () => {
         const index = Math.floor(Math.random() * algorithms.length);
         const algorithm = algorithms[index];
 
-        cube.reset(vis);
-        cube.applyMoves(algorithm, true);
-        cube.drawCube(vis, index >= steps[0].algorithms.length);
+        algorithmCube.reset(algorithmVisualization);
+        algorithmCube.applyMoves(algorithm, true);
+        algorithmCube.drawCube(algorithmVisualization, index >= steps[0].algorithms.length);
+
+        resultCube.reset(resultVisualization);
+        resultCube.applyMoves(algorithm, false);
+        resultCube.drawCube(resultVisualization, index >= steps[0].algorithms.length);
 
         algorithmLabel.innerText = algorithm;
     });
@@ -109,9 +120,13 @@ const preparePracticeArea = () => {
         const index = Math.floor(Math.random() * algs.length);
         const algorithm = algs[index];
 
-        cube.reset(vis);
-        cube.applyMoves(algorithm, true);
-        cube.drawCube(vis);
+        algorithmCube.reset(algorithmVisualization);
+        algorithmCube.applyMoves(algorithm, true);
+        algorithmCube.drawCube(algorithmVisualization);
+
+        resultCube.reset(resultVisualization);
+        resultCube.applyMoves(algorithm, false);
+        resultCube.drawCube(resultVisualization);
 
         algorithmLabel.innerText = algorithm;
     });
@@ -125,9 +140,13 @@ const preparePracticeArea = () => {
         const index = Math.floor(Math.random() * algs.length);
         const algorithm = algs[index];
 
-        cube.reset(vis);
-        cube.applyMoves(algorithm, true);
-        cube.drawCube(vis, true);
+        algorithmCube.reset(algorithmVisualization);
+        algorithmCube.applyMoves(algorithm, true);
+        algorithmCube.drawCube(algorithmVisualization, true);
+
+        resultCube.reset(resultVisualization);
+        resultCube.applyMoves(algorithm, false);
+        resultCube.drawCube(resultVisualization, true);
 
         algorithmLabel.innerText = algorithm;
     });
