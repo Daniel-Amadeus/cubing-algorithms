@@ -6,7 +6,8 @@
     "directories": {
         "doc": "docs"
     },
-    "dependencies": {
+    "dependencies": {},
+    "devDependencies": {
         "@types/gl-matrix": "^2.4.5",
         "bootstrap": "^4.6.0",
         "copy-webpack-plugin": "^5.1.2",
@@ -27,7 +28,6 @@
         "webpack-cli": "^3.3.12",
         "webpack-dev-server": "^3.11.2"
     },
-    "devDependencies": {},
     "scripts": {
         "build": "webpack",
         "start": "webpack-dev-server",
