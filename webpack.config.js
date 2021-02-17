@@ -3,6 +3,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
     entry: './source/code/main.ts',
@@ -56,29 +57,25 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'source/pages/index.pug',
-            inject: false
+            template: 'source/pages/index.pug'
         }),
         new HtmlWebpackPlugin({
             filename: 'beginner.html',
-            template: 'source/pages/beginner.pug',
-            inject: false
+            template: 'source/pages/beginner.pug'
         }),
         new HtmlWebpackPlugin({
             filename: 'speed_cubing.html',
-            template: 'source/pages/speed_cubing.pug',
-            inject: false
+            template: 'source/pages/speed_cubing.pug'
         }),
         new HtmlWebpackPlugin({
             filename: 'more.html',
-            template: 'source/pages/more.pug',
-            inject: false
+            template: 'source/pages/more.pug'
         }),
         new HtmlWebpackPlugin({
             filename: 'practice.html',
-            template: 'source/pages/practice.pug',
-            inject: false
+            template: 'source/pages/practice.pug'
         }),
+        new FaviconsWebpackPlugin('./source/img/cube.svg'),
         new CopyWebpackPlugin([
             { from: 'source/css', to: 'css' }
         ]),
