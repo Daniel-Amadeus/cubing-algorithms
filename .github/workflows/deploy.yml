@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: src
+          lfs: true
       - name: Check out deploy branch
         uses: actions/checkout@v2
         with:
