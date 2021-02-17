@@ -5,6 +5,25 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
+const pageList = [
+    'index',
+    'beginner',
+    'speed_cubing',
+    'more',
+    'practice'
+];
+
+const pages = pageList.map((pageName) => {
+    return new HtmlWebpackPlugin({
+        filename: pageName + '.html',
+        template: './source/pages/' + pageName + '.pug',
+        templateParameters: {
+            data: require('./source/algorithms.json'),
+            specials: require('./source/algorithms_special.json'),
+        }
+    })
+});
+
 module.exports = {
     entry: './source/code/main.ts',
     devtool: 'inline-source-map',
@@ -21,23 +40,21 @@ module.exports = {
                 use: ['style-loader', 'css-loader']
             },
             {
-                test: /\.(jpg|jpeg|png|woff|woff2|eot|ttf|svg)$/,
-                loader: 'url-loader?limit=100000'
+                test: /\.pug$/,
+                loader: 'pug-loader'
             },
             {
-                test: /\.pug$/,
-                loader: 'html-loader?attrs=false'
-            },
-            {
-                test: /\.pug$/,
-                loader: 'pug-html-loader',
-                options: {
-                    data: {
-                        data: require('./source/algorithms.json'),
-                        specials: require('./source/algorithms_special.json'),
+                test: /\.(jpe?g|png|woff2?|eot|ttf|svg)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            esModule: false,
+                            name: '[name]_[md5:hash:hex:4].[ext]'
+                        }
                     }
-                }
-            }
+                ]
+            },
         ],
     },
     resolve: {
@@ -55,32 +72,7 @@ module.exports = {
         watchContentBase: true
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: 'source/pages/index.pug'
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'beginner.html',
-            template: 'source/pages/beginner.pug'
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'speed_cubing.html',
-            template: 'source/pages/speed_cubing.pug'
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'more.html',
-            template: 'source/pages/more.pug'
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'practice.html',
-            template: 'source/pages/practice.pug'
-        }),
-        new FaviconsWebpackPlugin('./source/img/cube.svg'),
-        new CopyWebpackPlugin([
-            { from: 'source/css', to: 'css' }
-        ]),
-        new CopyWebpackPlugin([
-            { from: 'source/img', to: 'img' }
-        ]),
+        ...pages,
+        new FaviconsWebpackPlugin('./source/img/cube.svg')
     ]
 };
