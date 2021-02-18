@@ -1,5 +1,4 @@
 import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 const data = require('../algorithms.json');
 const specials = require('../algorithms_special.json');
 const { Cube } = require('./cube');

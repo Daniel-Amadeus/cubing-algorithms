@@ -37,7 +37,15 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            esModule: false,
+                            name: '[name].css'
+                        }
+                    }
+                ]
             },
             {
                 test: /\.pug$/,
