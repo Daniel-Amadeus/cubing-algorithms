@@ -89,7 +89,7 @@ module.exports = (env, argv) => {
     config.plugins.push(
         new FaviconsWebpackPlugin({
             logo: './source/img/cube.svg',
-            publicPath: devMode ? '/' : 'cubing-algorithms/'
+            publicPath: devMode ? '/' : '/'
         })
     );
     return config;
