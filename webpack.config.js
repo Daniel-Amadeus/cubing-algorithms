@@ -24,7 +24,7 @@ const pages = pageList.map((pageName) => {
     })
 });
 
-module.exports = {
+const config = {
     entry: './source/code/main.ts',
     devtool: 'inline-source-map',
     mode: 'development',
@@ -72,7 +72,7 @@ module.exports = {
         filename: '[name].js',
         path: path.resolve(__dirname, 'build'),
         library: undefined,
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
     },
     devServer: {
         open: true,
@@ -80,7 +80,17 @@ module.exports = {
         watchContentBase: true
     },
     plugins: [
-        ...pages,
-        new FaviconsWebpackPlugin('./source/img/cube.svg')
+        ...pages
     ]
 };
+
+module.exports = (env, argv) => {
+    const devMode = argv.mode === 'development';
+    config.plugins.push(
+        new FaviconsWebpackPlugin({
+            logo: './source/img/cube.svg',
+            publicPath: devMode ? '/' : 'cubing-algorithms/'
+        })
+    );
+    return config;
+}
