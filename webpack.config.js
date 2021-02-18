@@ -86,10 +86,11 @@ const config = {
 
 module.exports = (env, argv) => {
     const devMode = argv.mode === 'development';
-    config.output.publicPath = devMode ? '/' : 'cubing-algorithms/';
+    config.output.publicPath = devMode ? '/' : '/cubing-algorithms/';
     config.plugins.push(
         new FaviconsWebpackPlugin({
-            logo: './source/img/cube.svg'
+            logo: './source/img/cube.svg',
+            mode: devMode ? 'light' : 'webapp'
         })
     );
     return config;
