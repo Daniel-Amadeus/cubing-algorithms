@@ -1,11 +1,16 @@
 import 'bootstrap';
 const data = require('../algorithms.json');
 const specials = require('../algorithms_special.json');
+const patterns = require('../patterns.json');
 const { Cube } = require('./cube');
 
 window.onload = function () {
     if (document.getElementById('algorithms')) {
         drawAlgorithms();
+    }
+
+    if (document.getElementById('patterns')) {
+        drawPatterns();
     }
 
     if (document.getElementById('specials')) {
@@ -34,6 +39,20 @@ const drawAlgorithms = () => {
                     cube.drawCube(vis, step.short == 'pll');
                 })
         })
+    })
+}
+
+const drawPatterns = () => {
+    patterns.forEach((specials: any, algorithmIndex: number) => {
+        const id = `cubeVis-${algorithmIndex}`;
+        const vis = document.getElementById(id) as HTMLDivElement;
+        if (!vis) {
+            return;
+        }
+
+        let cube = new Cube(specials.cube_size);
+        cube.applyMoves(specials.algorithm);
+        cube.drawCube(vis, true);
     })
 }
 

@@ -1,0 +1,13 @@
+extends layout.pug
+
+block content
+    #patterns.content.container
+        p This page shows algorithms of patterns I like. More infos can be found here at #[a(href='https://speedcube.de') speedcube.de], especially the #[a(href='https://speedcube.de/notation.php') notation]. Helpful videos: #[a(href='https://youtu.be/KWOZHbDdOeo') Solve a 4x4 by J Perm], #[a(href='https://youtu.be/d1I-jJlVwB4') Solve a 5x5 by J Perm].
+        .row
+            each pattern, patternIndex in patterns
+                -let id = `${patternIndex}`
+                .col-md-6
+                    .row.p-3(id=`${id}`)
+                        .cubeVis(id=`cubeVis-${id}`)
+                            include partials/cubeAnnotation.pug
+                        p.my-auto.mx-0.col= pattern.algorithm

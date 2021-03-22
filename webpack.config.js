@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
@@ -9,6 +8,7 @@ const pageList = [
     'index',
     'beginner',
     'speed_cubing',
+    'patterns',
     'more',
     'practice'
 ];
@@ -20,6 +20,7 @@ const pages = pageList.map((pageName) => {
         templateParameters: {
             data: require('./source/algorithms.json'),
             specials: require('./source/algorithms_special.json'),
+            patterns: require('./source/patterns.json'),
         }
     })
 });
